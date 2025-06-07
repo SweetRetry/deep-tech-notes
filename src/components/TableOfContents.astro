@@ -1,0 +1,240 @@
+---
+// 目录组件 - 用于显示文章标题导航
+---
+
+<!-- 移动端目录切换按钮 -->
+<button 
+  id="toc-toggle" 
+  class="lg:hidden fixed bottom-6 right-6 bg-blue-600 text-white p-3 rounded-full shadow-lg z-20 hover:bg-blue-700 transition-colors duration-200"
+  aria-label="打开目录"
+>
+  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/>
+  </svg>
+</button>
+
+<!-- 移动端目录遮罩 -->
+<div id="toc-overlay" class="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-40 hidden"></div>
+
+<!-- 目录容器 -->
+<div id="table-of-contents" class="toc-container lg:block fixed lg:right-8 lg:top-1/2 lg:transform lg:-translate-y-1/2 z-50 lg:z-10">
+  <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg p-4 max-w-xs max-h-96 overflow-y-auto">
+    <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-3 flex items-center">
+      <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/>
+      </svg>
+      目录
+    </h3>
+    <ul id="toc-list" class="space-y-1 text-sm">
+      <!-- 目录项将通过JavaScript动态生成 -->
+    </ul>
+  </div>
+</div>
+
+<style>
+  .toc-container {
+    width: 280px;
+  }
+  
+  /* 移动端样式 */
+  @media (max-width: 1023px) {
+    .toc-container {
+      bottom: 0;
+      right: 0;
+      left: 0;
+      width: 100%;
+      max-height: 60vh;
+      transform: translateY(100%);
+      transition: transform 0.3s ease-in-out;
+    }
+    
+    .toc-container.show {
+      transform: translateY(0);
+    }
+    
+    .toc-container > div {
+      border-radius: 1rem 1rem 0 0;
+      max-height: none;
+      height: 60vh;
+    }
+  }
+  
+  .toc-item {
+    display: block;
+    padding: 0.25rem 0.5rem;
+    color: #6b7280;
+    text-decoration: none;
+    border-radius: 0.375rem;
+    transition: all 0.2s ease-in-out;
+    border-left: 2px solid transparent;
+  }
+  
+  .toc-item:hover {
+    background-color: #f3f4f6;
+    color: #374151;
+  }
+  
+  .dark .toc-item:hover {
+    background-color: #374151;
+    color: #d1d5db;
+  }
+  
+  .toc-item.active {
+    color: #2563eb;
+    background-color: #dbeafe;
+    border-left-color: #2563eb;
+  }
+  
+  .dark .toc-item.active {
+    color: #60a5fa;
+    background-color: #1e3a8a;
+    border-left-color: #60a5fa;
+  }
+  
+  .toc-item.level-2 {
+    padding-left: 1rem;
+  }
+  
+  .toc-item.level-3 {
+    padding-left: 1.5rem;
+  }
+  
+  .toc-item.level-4 {
+    padding-left: 2rem;
+  }
+  
+  .toc-item.level-5 {
+    padding-left: 2.5rem;
+  }
+  
+  .toc-item.level-6 {
+    padding-left: 3rem;
+  }
+</style>
+
+<script>
+  // 生成目录
+  function generateTableOfContents() {
+    const tocList = document.getElementById('toc-list');
+    const tocContainer = document.getElementById('table-of-contents');
+    
+    if (!tocList || !tocContainer) return;
+    
+    // 获取文章内容区域的所有标题
+    const headings = document.querySelectorAll('.prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6');
+    
+    if (headings.length === 0) {
+      tocContainer.style.display = 'none';
+      return;
+    }
+    
+    // 为每个标题添加ID（如果没有的话）
+    headings.forEach((heading, index) => {
+      if (!heading.id) {
+        const text = heading.textContent || '';
+        heading.id = `heading-${index}-${text.toLowerCase().replace(/[^\w\u4e00-\u9fff]+/g, '-')}`;
+      }
+    });
+    
+    // 生成目录项
+    const tocItems = Array.from(headings).map(heading => {
+      const level = parseInt(heading.tagName.charAt(1));
+      const text = heading.textContent || '';
+      const id = heading.id;
+      
+      const li = document.createElement('li');
+      const a = document.createElement('a');
+      a.href = `#${id}`;
+      a.textContent = text;
+      a.className = `toc-item level-${level}`;
+      a.onclick = (e) => {
+        e.preventDefault();
+        const target = document.getElementById(id);
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          // 更新活动状态
+          updateActiveItem(a);
+        }
+      };
+      
+      li.appendChild(a);
+      return li;
+    });
+    
+    // 清空并添加目录项
+    tocList.innerHTML = '';
+    tocItems.forEach(item => tocList.appendChild(item));
+    
+    // 设置滚动监听
+    setupScrollSpy(headings);
+  }
+  
+  // 设置滚动监听
+  function setupScrollSpy(headings) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const id = entry.target.id;
+            const activeLink = document.querySelector(`.toc-item[href="#${id}"]`);
+            if (activeLink) {
+              updateActiveItem(activeLink);
+            }
+          }
+        });
+      },
+      { 
+        rootMargin: '-20% 0px -35% 0px',
+        threshold: 0
+      }
+    );
+    
+    headings.forEach(heading => observer.observe(heading));
+  }
+  
+  // 更新活动项
+  function updateActiveItem(activeLink) {
+    // 移除所有活动状态
+    document.querySelectorAll('.toc-item.active').forEach(item => {
+      item.classList.remove('active');
+    });
+    
+    // 添加活动状态
+    activeLink.classList.add('active');
+  }
+  
+  // 移动端目录切换
+  function setupMobileToggle() {
+    const toggleButton = document.getElementById('toc-toggle');
+    const tocContainer = document.getElementById('table-of-contents');
+    const overlay = document.getElementById('toc-overlay');
+    
+    if (!toggleButton || !tocContainer || !overlay) return;
+    
+    toggleButton.addEventListener('click', () => {
+      const isVisible = tocContainer.classList.contains('show');
+      
+      if (isVisible) {
+        tocContainer.classList.remove('show');
+        overlay.classList.add('hidden');
+        document.body.style.overflow = '';
+      } else {
+        tocContainer.classList.add('show');
+        overlay.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+      }
+    });
+    
+    overlay.addEventListener('click', () => {
+      tocContainer.classList.remove('show');
+      overlay.classList.add('hidden');
+      document.body.style.overflow = '';
+    });
+  }
+  
+  // 页面加载完成后生成目录
+  document.addEventListener('DOMContentLoaded', () => {
+    generateTableOfContents();
+    setupMobileToggle();
+  });
+</script> 

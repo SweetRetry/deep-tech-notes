@@ -3,6 +3,7 @@ import BaseHead from "../components/BaseHead.astro";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import SpeedInsights from "../components/SpeedInsights.astro";
+import TableOfContents from "../components/TableOfContents.astro";
 import FormattedDate from "../components/FormattedDate.astro";
 import { Image } from "astro:assets";
 
@@ -32,6 +33,18 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
           font-size: 0.95rem;
         }
       }
+      
+      /* 大屏幕时为目录留出空间 */
+      @media (min-width: 1024px) {
+        .blog-content {
+          margin-right: 320px;
+        }
+      }
+      
+      /* 确保目录在合适的层级 */
+      .toc-container {
+        z-index: 30;
+      }
     </style>
   </head>
 
@@ -39,6 +52,7 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
     class="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300"
   >
     <Header />
+    <TableOfContents />
     <main class="w-full max-w-7xl mx-auto px-0 pt-16">
       <article>
         <!-- Hero Image -->
@@ -59,7 +73,7 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
         }
 
         <!-- Content -->
-        <div class="max-w-4xl mx-auto px-6 md:px-8 py-8 md:py-12">
+        <div class="blog-content max-w-4xl mx-auto px-6 md:px-8 py-8 md:py-12">
           <!-- Title Section -->
           <div
             class="text-center mb-12 pb-8 border-b border-gray-200 dark:border-gray-700"
