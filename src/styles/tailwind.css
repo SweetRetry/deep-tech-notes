@@ -1,0 +1,8 @@
+@import "tailwindcss";
+
+/* 添加Typography插件 */
+@plugin "@tailwindcss/typography";
+
+/* 配置黑暗模式变体 - Tailwind v4语法 */
+@variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+

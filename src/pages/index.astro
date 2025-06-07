@@ -1,49 +1,317 @@
 ---
-import BaseHead from '../components/BaseHead.astro';
-import Header from '../components/Header.astro';
-import Footer from '../components/Footer.astro';
-import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+import BaseHead from "../components/BaseHead.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import { SITE_TITLE, SITE_DESCRIPTION } from "../consts";
+import { getCollection } from "astro:content";
+
+// 获取各个分类的内容
+const browserPosts = await getCollection("browser");
+const engineeringPosts = await getCollection("engineering");
+const infraPosts = await getCollection("infra");
+const languagePosts = await getCollection("language");
 ---
 
 <!doctype html>
-<html lang="en">
-	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-	</head>
-	<body>
-		<Header />
-		<main>
-			<h1>🧑‍🚀 Hello, Astronaut!</h1>
-			<p>
-				Welcome to the official <a href="https://astro.build/">Astro</a> blog starter template. This
-				template serves as a lightweight, minimally-styled starting point for anyone looking to build
-				a personal website, blog, or portfolio with Astro.
-			</p>
-			<p>
-				This template comes with a few integrations already configured in your
-				<code>astro.config.mjs</code> file. You can customize your setup with
-				<a href="https://astro.build/integrations">Astro Integrations</a> to add tools like Tailwind,
-				React, or Vue to your project.
-			</p>
-			<p>Here are a few ideas on how to get started with the template:</p>
-			<ul>
-				<li>Edit this page in <code>src/pages/index.astro</code></li>
-				<li>Edit the site header items in <code>src/components/Header.astro</code></li>
-				<li>Add your name to the footer in <code>src/components/Footer.astro</code></li>
-				<li>Check out the included blog posts in <code>src/content/blog/</code></li>
-				<li>Customize the blog post page layout in <code>src/layouts/BlogPost.astro</code></li>
-			</ul>
-			<p>
-				Have fun! If you get stuck, remember to
-				<a href="https://docs.astro.build/">read the docs</a>
-				or <a href="https://astro.build/chat">join us on Discord</a> to ask questions.
-			</p>
-			<p>
-				Looking for a blog template with a bit more personality? Check out
-				<a href="https://github.com/Charca/astro-blog-template">astro-blog-template</a>
-				by <a href="https://twitter.com/Charca">Maxi Ferreira</a>.
-			</p>
-		</main>
-		<Footer />
-	</body>
+<html lang="zh-CN">
+  <head>
+    <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+  </head>
+  <body
+    class="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300"
+  >
+    <Header />
+    <main class="container mx-auto px-6 py-8 lg:px-8 max-w-7xl">
+      <!-- Hero Section -->
+      <section class="text-center py-12 md:py-16 space-y-6">
+        <h1
+          class="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 bg-clip-text text-transparent animate-pulse"
+        >
+          🚀 {SITE_TITLE}
+        </h1>
+        <p
+          class="text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-4 font-medium"
+        >
+          {SITE_DESCRIPTION}
+        </p>
+        <p
+          class="max-w-2xl mx-auto text-base md:text-lg leading-relaxed text-gray-700 dark:text-gray-300"
+        >
+          从底层原理到架构设计，从语言特性到工程实践。
+          专注技术深度挖掘，分享真实项目经验与思考洞察。
+        </p>
+      </section>
+
+      <!-- Categories Section -->
+      <section class="py-12 space-y-8">
+        <div class="text-center">
+          <h2
+            class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4"
+          >
+            📚 技术分类
+          </h2>
+          <div
+            class="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto rounded-full"
+          >
+          </div>
+        </div>
+
+        <div
+          class="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2"
+        >
+          <!-- 浏览器原理 -->
+          <div
+            class="group bg-white dark:bg-gray-800/70 backdrop-blur-sm p-6 rounded-xl border border-gray-200 dark:border-gray-600 shadow-lg hover:shadow-xl dark:hover:shadow-2xl dark:hover:shadow-blue-500/10 transition-all duration-300 hover:-translate-y-1 border-l-4 border-l-blue-500 dark:border-l-blue-400"
+          >
+            <div class="space-y-4">
+              <h3
+                class="text-xl font-bold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-200"
+              >
+                🧠 浏览器原理
+              </h3>
+              <p
+                class="text-gray-600 dark:text-gray-200 text-sm leading-relaxed"
+              >
+                探索渲染引擎、JavaScript执行、多进程架构的底层机制
+              </p>
+              <ul class="space-y-2">
+                {
+                  browserPosts.map((post) => (
+                    <li>
+                      <a
+                        href={`/browser/${post.id}`}
+                        class="inline-flex items-center text-sm text-blue-600 dark:text-blue-300 hover:text-blue-700 dark:hover:text-blue-200 transition-colors duration-200 hover:underline"
+                      >
+                        <svg
+                          class="w-3 h-3 mr-2 flex-shrink-0"
+                          width="12"
+                          height="12"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            fill-rule="evenodd"
+                            d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                            clip-rule="evenodd"
+                          />
+                        </svg>
+                        {post.data.title}
+                      </a>
+                    </li>
+                  ))
+                }
+              </ul>
+            </div>
+          </div>
+
+          <!-- 工程实践 -->
+          <div
+            class="group bg-white dark:bg-gray-800/70 backdrop-blur-sm p-6 rounded-xl border border-gray-200 dark:border-gray-600 shadow-lg hover:shadow-xl dark:hover:shadow-2xl dark:hover:shadow-green-500/10 transition-all duration-300 hover:-translate-y-1 border-l-4 border-l-green-500 dark:border-l-green-400"
+          >
+            <div class="space-y-4">
+              <h3
+                class="text-xl font-bold text-gray-900 dark:text-white group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors duration-200"
+              >
+                🛠️ 工程实践
+              </h3>
+              <p
+                class="text-gray-600 dark:text-gray-200 text-sm leading-relaxed"
+              >
+                Monorepo管理、设计模式、重构策略与团队协作最佳实践
+              </p>
+              <ul class="space-y-2">
+                {
+                  engineeringPosts.map((post) => (
+                    <li>
+                      <a
+                        href={`/engineering/${post.id}`}
+                        class="inline-flex items-center text-sm text-green-600 dark:text-green-300 hover:text-green-700 dark:hover:text-green-200 transition-colors duration-200 hover:underline"
+                      >
+                        <svg
+                          class="w-3 h-3 mr-2 flex-shrink-0"
+                          width="12"
+                          height="12"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            fill-rule="evenodd"
+                            d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                            clip-rule="evenodd"
+                          />
+                        </svg>
+                        {post.data.title}
+                      </a>
+                    </li>
+                  ))
+                }
+              </ul>
+            </div>
+          </div>
+
+          <!-- 基础设施 -->
+          <div
+            class="group bg-white dark:bg-gray-800/70 backdrop-blur-sm p-6 rounded-xl border border-gray-200 dark:border-gray-600 shadow-lg hover:shadow-xl dark:hover:shadow-2xl dark:hover:shadow-orange-500/10 transition-all duration-300 hover:-translate-y-1 border-l-4 border-l-orange-500 dark:border-l-orange-400"
+          >
+            <div class="space-y-4">
+              <h3
+                class="text-xl font-bold text-gray-900 dark:text-white group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors duration-200"
+              >
+                🏗️ 基础设施
+              </h3>
+              <p
+                class="text-gray-600 dark:text-gray-200 text-sm leading-relaxed"
+              >
+                CDN优化、Nginx配置、认证体系与服务端技术深度解析
+              </p>
+              <ul class="space-y-2">
+                {
+                  infraPosts.map((post) => (
+                    <li>
+                      <a
+                        href={`/infra/${post.id}`}
+                        class="inline-flex items-center text-sm text-orange-600 dark:text-orange-300 hover:text-orange-700 dark:hover:text-orange-200 transition-colors duration-200 hover:underline"
+                      >
+                        <svg
+                          class="w-3 h-3 mr-2 flex-shrink-0"
+                          width="12"
+                          height="12"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            fill-rule="evenodd"
+                            d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                            clip-rule="evenodd"
+                          />
+                        </svg>
+                        {post.data.title}
+                      </a>
+                    </li>
+                  ))
+                }
+              </ul>
+            </div>
+          </div>
+
+          <!-- 编程语言 -->
+          <div
+            class="group bg-white dark:bg-gray-800/70 backdrop-blur-sm p-6 rounded-xl border border-gray-200 dark:border-gray-600 shadow-lg hover:shadow-xl dark:hover:shadow-2xl dark:hover:shadow-purple-500/10 transition-all duration-300 hover:-translate-y-1 border-l-4 border-l-purple-500 dark:border-l-purple-400"
+          >
+            <div class="space-y-4">
+              <h3
+                class="text-xl font-bold text-gray-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors duration-200"
+              >
+                💻 编程语言
+              </h3>
+              <p
+                class="text-gray-600 dark:text-gray-200 text-sm leading-relaxed"
+              >
+                TypeScript进阶、SQL优化与编程语言特性深度剖析
+              </p>
+              <ul class="space-y-2">
+                {
+                  languagePosts.map((post) => (
+                    <li>
+                      <a
+                        href={`/language/${post.id}`}
+                        class="inline-flex items-center text-sm text-purple-600 dark:text-purple-300 hover:text-purple-700 dark:hover:text-purple-200 transition-colors duration-200 hover:underline"
+                      >
+                        <svg
+                          class="w-3 h-3 mr-2 flex-shrink-0"
+                          width="12"
+                          height="12"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            fill-rule="evenodd"
+                            d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                            clip-rule="evenodd"
+                          />
+                        </svg>
+                        {post.data.title}
+                      </a>
+                    </li>
+                  ))
+                }
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Features Section -->
+      <section class="py-12 space-y-8">
+        <div class="text-center">
+          <h2
+            class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4"
+          >
+            ✨ 特色内容
+          </h2>
+          <div
+            class="w-24 h-1 bg-gradient-to-r from-green-500 to-blue-500 mx-auto rounded-full"
+          >
+          </div>
+        </div>
+
+        <div class="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+          <div
+            class="group text-center p-8 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+          >
+            <div
+              class="text-4xl mb-4 group-hover:scale-110 transition-transform duration-200"
+            >
+              🔍
+            </div>
+            <h3
+              class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-3 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-200"
+            >
+              原理解析
+            </h3>
+            <p class="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
+              透过现象看本质，从源码到架构的技术内核剖析
+            </p>
+          </div>
+
+          <div
+            class="group text-center p-8 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+          >
+            <div
+              class="text-4xl mb-4 group-hover:scale-110 transition-transform duration-200"
+            >
+              💡
+            </div>
+            <h3
+              class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-3 group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors duration-200"
+            >
+              实战经验
+            </h3>
+            <p class="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
+              生产环境踩坑记录，可复现的解决方案与优化策略
+            </p>
+          </div>
+
+          <div
+            class="group text-center p-8 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 md:col-span-2 lg:col-span-1"
+          >
+            <div
+              class="text-4xl mb-4 group-hover:scale-110 transition-transform duration-200"
+            >
+              📈
+            </div>
+            <h3
+              class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-3 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors duration-200"
+            >
+              体系构建
+            </h3>
+            <p class="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
+              知识点串联成线，构建完整的技术认知体系
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
+    <Footer />
+  </body>
 </html>

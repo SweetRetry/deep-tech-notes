@@ -4,18 +4,27 @@ import BlogPost from '../../layouts/BlogPost.astro';
 import { render } from 'astro:content';
 
 export async function getStaticPaths() {
-	const posts = await getCollection('blog');
+	const posts = await getCollection('engineering');
 	return posts.map((post) => ({
 		params: { slug: post.id },
 		props: post,
 	}));
 }
-type Props = CollectionEntry<'blog'>;
+type Props = CollectionEntry<'engineering'>;
 
 const post = Astro.props;
 const { Content } = await render(post);
+
+// 确保必需的字段有默认值
+const postData = {
+	title: post.data.title,
+	description: post.data.description || '',
+	pubDate: post.data.pubDate || new Date(),
+	updatedDate: post.data.updatedDate,
+	heroImage: undefined
+};
 ---
 
-<BlogPost {...post.data}>
+<BlogPost {...postData}>
 	<Content />
-</BlogPost>
+</BlogPost> 

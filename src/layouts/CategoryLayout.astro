@@ -1,0 +1,95 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import FormattedDate from '../components/FormattedDate.astro';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+import { getCollection } from 'astro:content';
+import { sortPostsByDate, type PostType } from '../utils/posts';
+
+interface Props {
+	collection: 'browser' | 'engineering' | 'infra' | 'language';
+	title: string;
+	description: string;
+	icon: string;
+	gradient: string;
+}
+
+const { collection, title, description, icon, gradient } = Astro.props;
+
+// 获取并排序文章
+const posts = sortPostsByDate(await getCollection(collection) as PostType[]);
+---
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+	<head>
+		<BaseHead title={`${title} - ${SITE_TITLE}`} description={SITE_DESCRIPTION} />
+	</head>
+	<body class="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300">
+		<Header />
+		<main class="container mx-auto px-6 py-8 lg:px-8 max-w-7xl">
+			<section class="space-y-12">
+				<!-- 页头区域 -->
+				<header class="text-center space-y-6 py-8">
+					<h1 class="text-4xl font-bold mb-6 bg-clip-text text-transparent sm:text-5xl leading-tight px-4"
+						style={`background-image: ${gradient}; -webkit-background-clip: text; background-clip: text; padding-top: 0.25rem; padding-bottom: 0.25rem;`}>
+						{icon} {title}
+					</h1>
+					<p class="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
+						{description}
+					</p>
+				</header>
+
+				<!-- 文章列表 -->
+				<div class="grid gap-6 grid-cols-1 md:grid-cols-2 md:gap-8 lg:grid-cols-3">
+					{posts.map((post: PostType, index: number) => (
+						<article class="group bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+							<a href={`/${post.collection}/${post.id}/`} 
+							   class="block p-6 h-full space-y-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-200">
+								
+								<!-- 文章标题 -->
+								<h2 class="text-lg font-semibold text-gray-900 dark:text-gray-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-200 line-clamp-2">
+									{post.data.title}
+								</h2>
+								
+								<!-- 文章描述 -->
+								<p class="text-sm text-gray-600 dark:text-gray-300 leading-relaxed line-clamp-3 flex-1">
+									{post.data.description}
+								</p>
+								
+								<!-- 发布日期 -->
+								{post.data.pubDate && (
+									<time class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400">
+										<FormattedDate date={post.data.pubDate} />
+									</time>
+								)}
+								
+								<!-- 阅读提示 -->
+								<div class="flex items-center text-blue-600 dark:text-blue-400 text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+									<span>阅读更多</span>
+									<svg class="ml-1 w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-200" 
+										 fill="none" stroke="currentColor" viewBox="0 0 24 24">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+									</svg>
+								</div>
+							</a>
+						</article>
+					))}
+				</div>
+
+				<!-- 空状态 -->
+				{posts.length === 0 && (
+					<div class="text-center py-16 space-y-4">
+						<div class="text-4xl opacity-50">📝</div>
+						<h3 class="text-xl font-medium text-gray-600 dark:text-gray-400">暂无文章</h3>
+						<p class="text-gray-500 dark:text-gray-500">内容正在整理中，敬请期待...</p>
+					</div>
+				)}
+			</section>
+		</main>
+		<Footer />
+	</body>
+</html>
+
+ 

@@ -1,0 +1,12 @@
+---
+import CategoryLayout from '../layouts/CategoryLayout.astro';
+import { CATEGORIES } from '../consts';
+
+const categoryKey = 'infra';
+const categoryConfig = CATEGORIES[categoryKey];
+---
+
+<CategoryLayout 
+	collection={categoryKey}
+	{...categoryConfig}
+/> 

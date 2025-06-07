@@ -1,86 +1,96 @@
 ---
-import type { CollectionEntry } from 'astro:content';
-import BaseHead from '../components/BaseHead.astro';
-import Header from '../components/Header.astro';
-import Footer from '../components/Footer.astro';
-import FormattedDate from '../components/FormattedDate.astro';
-import { Image } from 'astro:assets';
+import BaseHead from "../components/BaseHead.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import FormattedDate from "../components/FormattedDate.astro";
+import { Image } from "astro:assets";
 
-type Props = CollectionEntry<'blog'>['data'];
+type Props = {
+  title: string;
+  description: string;
+  pubDate: Date;
+  updatedDate?: Date;
+  heroImage?: any;
+};
 
 const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 ---
 
-<html lang="en">
-	<head>
-		<BaseHead title={title} description={description} />
-		<style>
-			main {
-				width: calc(100% - 2em);
-				max-width: 100%;
-				margin: 0;
-			}
-			.hero-image {
-				width: 100%;
-			}
-			.hero-image img {
-				display: block;
-				margin: 0 auto;
-				border-radius: 12px;
-				box-shadow: var(--box-shadow);
-			}
-			.prose {
-				width: 720px;
-				max-width: calc(100% - 2em);
-				margin: auto;
-				padding: 1em;
-				color: rgb(var(--gray-dark));
-			}
-			.title {
-				margin-bottom: 1em;
-				padding: 1em 0;
-				text-align: center;
-				line-height: 1;
-			}
-			.title h1 {
-				margin: 0 0 0.5em 0;
-			}
-			.date {
-				margin-bottom: 0.5em;
-				color: rgb(var(--gray));
-			}
-			.last-updated-on {
-				font-style: italic;
-			}
-		</style>
-	</head>
+<html lang="zh-CN">
+  <head>
+    <BaseHead title={title} description={description} />
+    <style is:global>
+      /* 确保prose样式能够正确应用到slot内容 */
+      .prose {
+        max-width: none;
+      }
+      
+      /* 移动端优化 */
+      @media (max-width: 768px) {
+        .prose {
+          font-size: 0.95rem;
+        }
+      }
+    </style>
+  </head>
 
-	<body>
-		<Header />
-		<main>
-			<article>
-				<div class="hero-image">
-					{heroImage && <Image width={1020} height={510} src={heroImage} alt="" />}
-				</div>
-				<div class="prose">
-					<div class="title">
-						<div class="date">
-							<FormattedDate date={pubDate} />
-							{
-								updatedDate && (
-									<div class="last-updated-on">
-										Last updated on <FormattedDate date={updatedDate} />
-									</div>
-								)
-							}
-						</div>
-						<h1>{title}</h1>
-						<hr />
-					</div>
-					<slot />
-				</div>
-			</article>
-		</main>
-		<Footer />
-	</body>
+  <body
+    class="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300"
+  >
+    <Header />
+    <main class="w-full max-w-7xl mx-auto px-0">
+      <article>
+        <!-- Hero Image -->
+        {
+          heroImage && (
+            <div class="w-full max-w-7xl mx-auto px-6 md:px-8">
+              <div class="my-8 md:my-12">
+                <Image
+                  width={1020}
+                  height={510}
+                  src={heroImage}
+                  alt={title}
+                  class="block mx-auto rounded-xl shadow-lg dark:shadow-gray-900/50 max-w-full h-auto transition-transform duration-300 hover:scale-[1.02]"
+                />
+              </div>
+            </div>
+          )
+        }
+
+        <!-- Content -->
+        <div class="max-w-4xl mx-auto px-6 md:px-8 py-8 md:py-12">
+          <!-- Title Section -->
+          <div
+            class="text-center mb-12 pb-8 border-b border-gray-200 dark:border-gray-700"
+          >
+            <div class="mb-6 space-y-2">
+              <time
+                class="inline-flex items-center px-3 py-1 rounded-full text-sm bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 font-medium"
+              >
+                <FormattedDate date={pubDate} />
+              </time>
+              {
+                updatedDate && (
+                  <div class="text-sm text-gray-500 dark:text-gray-500 italic mt-2">
+                    最后更新于 <FormattedDate date={updatedDate} />
+                  </div>
+                )
+              }
+            </div>
+            <h1
+              class="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-gray-100 leading-tight"
+            >
+              {title}
+            </h1>
+          </div>
+
+          <!-- Article Content with Tailwind Typography -->
+          <div class="prose prose-lg dark:prose-invert mx-auto max-w-none">
+            <slot />
+          </div>
+        </div>
+      </article>
+    </main>
+    <Footer />
+  </body>
 </html>

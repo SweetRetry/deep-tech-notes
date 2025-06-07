@@ -1,7 +1,7 @@
 {
   "name": "astro-blog",
   "type": "module",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
@@ -12,7 +12,12 @@
     "@astrojs/mdx": "^4.3.0",
     "@astrojs/rss": "^4.0.12",
     "@astrojs/sitemap": "^3.4.1",
+    "@tailwindcss/vite": "^4.1.8",
     "astro": "^5.9.0",
-    "sharp": "^0.34.2"
+    "sharp": "^0.34.2",
+    "tailwindcss": "^4.1.8"
+  },
+  "devDependencies": {
+    "@tailwindcss/typography": "^0.5.16"
   }
 }

@@ -1,18 +1,44 @@
 import { glob } from 'astro/loaders';
 import { defineCollection, z } from 'astro:content';
 
-const blog = defineCollection({
-	// Load Markdown and MDX files in the `src/content/blog/` directory.
-	loader: glob({ base: './src/content/blog', pattern: '**/*.{md,mdx}' }),
-	// Type-check frontmatter using a schema
-	schema: ({ image }) => z.object({
+const browser = defineCollection({
+	loader: glob({ base: './src/content/browser', pattern: '**/*.{md,mdx}' }),
+	schema: z.object({
 		title: z.string(),
-		description: z.string(),
-		// Transform string to Date object
-		pubDate: z.coerce.date(),
+		description: z.string().optional(),
+		pubDate: z.coerce.date().optional(),
 		updatedDate: z.coerce.date().optional(),
-		heroImage: image().optional(),
 	}),
 });
 
-export const collections = { blog };
+const engineering = defineCollection({
+	loader: glob({ base: './src/content/engineering', pattern: '**/*.{md,mdx}' }),
+	schema: z.object({
+		title: z.string(),
+		description: z.string().optional(),
+		pubDate: z.coerce.date().optional(),
+		updatedDate: z.coerce.date().optional(),
+	}),
+});
+
+const infra = defineCollection({
+	loader: glob({ base: './src/content/infra', pattern: '**/*.{md,mdx}' }),
+	schema: z.object({
+		title: z.string(),
+		description: z.string().optional(),
+		pubDate: z.coerce.date().optional(),
+		updatedDate: z.coerce.date().optional(),
+	}),
+});
+
+const language = defineCollection({
+	loader: glob({ base: './src/content/language', pattern: '**/*.{md,mdx}' }),
+	schema: z.object({
+		title: z.string(),
+		description: z.string().optional(),
+		pubDate: z.coerce.date().optional(),
+		updatedDate: z.coerce.date().optional(),
+	}),
+});
+
+export const collections = { browser, engineering, infra, language };
