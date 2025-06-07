@@ -20,8 +20,17 @@ alwaysApply: true
 
 ### Navigation
 - Main navigation is handled by [Header.astro](mdc:src/components/Header.astro)
+- Mobile navigation uses [Drawer.astro](mdc:src/components/Drawer.astro) component for right-side drawer menu
 - Use [HeaderLink.astro](mdc:src/components/HeaderLink.astro) for consistent navigation links
 - Implement responsive navigation with mobile-friendly design
+
+### Drawer Component
+- [Drawer.astro](mdc:src/components/Drawer.astro) - Universal drawer component supporting 4 directions
+- Supports positions: `left`, `right`, `top`, `bottom`
+- Configurable size and max-size properties
+- Global `window.drawerManager` API for programmatic control
+- Automatic overlay, keyboard (ESC), and click-outside closing
+- Usage: `<Drawer id="my-drawer" position="right" size="20rem">content</Drawer>`
 
 ## Content Collections
 
