@@ -34,11 +34,9 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
         }
       }
       
-      /* 大屏幕时为目录留出空间 */
-      @media (min-width: 1024px) {
-        .blog-content {
-          margin-right: 320px;
-        }
+      /* 移动端目录动画 */
+      .mobile-toc-show {
+        transform: translateY(0) !important;
       }
       
       /* 确保目录在合适的层级 */
@@ -52,9 +50,43 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
     class="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300"
   >
     <Header />
-    <TableOfContents />
     <main class="w-full max-w-7xl mx-auto px-0 pt-16">
-      <article>
+      <div class="flex gap-8 relative">
+        <!-- 左侧目录 - 桌面端显示 -->
+        <aside class="hidden lg:block w-80 flex-shrink-0 sticky top-20 self-start h-fit max-h-[calc(100vh-6rem)] overflow-y-auto">
+          <TableOfContents />
+        </aside>
+        
+        <!-- 移动端目录按钮 -->
+        <button 
+          id="mobile-toc-toggle" 
+          class="lg:hidden fixed bottom-6 right-6 bg-blue-600 text-white p-3 rounded-full shadow-lg z-20 hover:bg-blue-700 transition-colors duration-200"
+          aria-label="打开目录"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/>
+          </svg>
+        </button>
+        
+        <!-- 移动端目录遮罩 -->
+        <div id="mobile-toc-overlay" class="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-40 hidden"></div>
+        
+        <!-- 移动端目录容器 -->
+        <div id="mobile-toc-container" class="lg:hidden fixed bottom-0 left-0 right-0 z-50 transform translate-y-full transition-transform duration-300">
+          <div class="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 rounded-t-2xl p-4 max-h-[60vh] overflow-y-auto">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">目录</h3>
+              <button id="mobile-toc-close" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+              </button>
+            </div>
+            <div id="mobile-toc-content"></div>
+          </div>
+        </div>
+
+      <article class="flex-1 min-w-0">
         <!-- Hero Image -->
         {
           heroImage && (
@@ -105,8 +137,57 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
           </div>
         </div>
       </article>
+      </div>
     </main>
     <Footer />
     <SpeedInsights />
+    
+    <script>
+      // 移动端目录控制
+      function setupMobileTOC() {
+        const toggleBtn = document.getElementById('mobile-toc-toggle');
+        const closeBtn = document.getElementById('mobile-toc-close');
+        const overlay = document.getElementById('mobile-toc-overlay');
+        const container = document.getElementById('mobile-toc-container');
+        const mobileContent = document.getElementById('mobile-toc-content');
+        
+        if (!toggleBtn || !closeBtn || !overlay || !container || !mobileContent) return;
+        
+        // 复制桌面端目录内容到移动端
+        function copyTOCContent() {
+          const desktopTOC = document.querySelector('aside .toc-content');
+          if (desktopTOC) {
+            mobileContent.innerHTML = desktopTOC.innerHTML;
+          }
+        }
+        
+        function openTOC() {
+          copyTOCContent();
+          overlay.classList.remove('hidden');
+          container.classList.add('mobile-toc-show');
+          document.body.style.overflow = 'hidden';
+        }
+        
+        function closeTOC() {
+          overlay.classList.add('hidden');
+          container.classList.remove('mobile-toc-show');
+          document.body.style.overflow = '';
+        }
+        
+        toggleBtn.addEventListener('click', openTOC);
+        closeBtn.addEventListener('click', closeTOC);
+        overlay.addEventListener('click', closeTOC);
+        
+        // 移动端目录项点击后关闭目录
+        container.addEventListener('click', (e) => {
+          if (e.target.classList.contains('toc-item')) {
+            closeTOC();
+          }
+        });
+      }
+      
+      // 页面加载完成后初始化
+      document.addEventListener('DOMContentLoaded', setupMobileTOC);
+    </script>
   </body>
 </html>

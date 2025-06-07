@@ -2,23 +2,9 @@
 // 目录组件 - 用于显示文章标题导航
 ---
 
-<!-- 移动端目录切换按钮 -->
-<button 
-  id="toc-toggle" 
-  class="lg:hidden fixed bottom-6 right-6 bg-blue-600 text-white p-3 rounded-full shadow-lg z-20 hover:bg-blue-700 transition-colors duration-200"
-  aria-label="打开目录"
->
-  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/>
-  </svg>
-</button>
-
-<!-- 移动端目录遮罩 -->
-<div id="toc-overlay" class="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-40 hidden"></div>
-
-<!-- 目录容器 -->
-<div id="table-of-contents" class="toc-container lg:block fixed lg:right-8 lg:top-1/2 lg:transform lg:-translate-y-1/2 z-50 lg:z-10">
-  <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg p-4 max-w-xs max-h-96 overflow-y-auto">
+<!-- 桌面端嵌入式目录 -->
+<div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm p-6">
+  <div class="toc-content">
     <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-3 flex items-center">
       <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/>
@@ -32,31 +18,9 @@
 </div>
 
 <style>
-  .toc-container {
-    width: 280px;
-  }
-  
-  /* 移动端样式 */
-  @media (max-width: 1023px) {
-    .toc-container {
-      bottom: 0;
-      right: 0;
-      left: 0;
-      width: 100%;
-      max-height: 60vh;
-      transform: translateY(100%);
-      transition: transform 0.3s ease-in-out;
-    }
-    
-    .toc-container.show {
-      transform: translateY(0);
-    }
-    
-    .toc-container > div {
-      border-radius: 1rem 1rem 0 0;
-      max-height: none;
-      height: 60vh;
-    }
+  /* 基础目录样式 */
+  .toc-content {
+    font-family: inherit;
   }
   
   .toc-item {
@@ -91,24 +55,110 @@
     border-left-color: #60a5fa;
   }
   
+  /* H1 标题样式 */
+  .toc-item.level-1 {
+    font-weight: 700;
+    font-size: 1rem;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.5rem;
+    background-color: #f8fafc;
+    color: #1e293b;
+  }
+  
+  .dark .toc-item.level-1 {
+    background-color: #1e293b;
+    color: #f1f5f9;
+  }
+  
+  /* H2 标题样式 */
   .toc-item.level-2 {
-    padding-left: 1rem;
-  }
-  
-  .toc-item.level-3 {
+    font-weight: 600;
+    font-size: 0.875rem;
     padding-left: 1.5rem;
+    margin-top: 0.5rem;
+    position: relative;
+    color: #374151;
   }
   
-  .toc-item.level-4 {
-    padding-left: 2rem;
+  .toc-item.level-2::before {
+    content: "";
+    position: absolute;
+    left: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background-color: #6366f1;
   }
   
-  .toc-item.level-5 {
+  .dark .toc-item.level-2 {
+    color: #d1d5db;
+  }
+  
+  /* H3 标题样式 */
+  .toc-item.level-3 {
+    font-weight: 500;
+    font-size: 0.8125rem;
     padding-left: 2.5rem;
+    color: #6b7280;
+    position: relative;
   }
   
+  .toc-item.level-3::before {
+    content: "";
+    position: absolute;
+    left: 2rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 2px;
+    height: 2px;
+    border-radius: 50%;
+    background-color: #9ca3af;
+  }
+  
+  .dark .toc-item.level-3 {
+    color: #9ca3af;
+  }
+  
+  /* H4 标题样式 */
+  .toc-item.level-4 {
+    font-weight: 400;
+    font-size: 0.75rem;
+    padding-left: 3.5rem;
+    color: #9ca3af;
+  }
+  
+  .dark .toc-item.level-4 {
+    color: #6b7280;
+  }
+  
+  /* H5 标题样式 */
+  .toc-item.level-5 {
+    font-weight: 400;
+    font-size: 0.75rem;
+    padding-left: 4.5rem;
+    color: #9ca3af;
+    font-style: italic;
+  }
+  
+  .dark .toc-item.level-5 {
+    color: #6b7280;
+  }
+  
+  /* H6 标题样式 */
   .toc-item.level-6 {
-    padding-left: 3rem;
+    font-weight: 400;
+    font-size: 0.6875rem;
+    padding-left: 5.5rem;
+    color: #9ca3af;
+    font-style: italic;
+  }
+  
+  .dark .toc-item.level-6 {
+    color: #6b7280;
   }
 </style>
 
