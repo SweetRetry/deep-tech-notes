@@ -5,6 +5,7 @@ import '../styles/global.css';
 import '../styles/tailwind.css';
 import { SITE_TITLE } from '../consts';
 import FallbackImage from '../assets/blog-placeholder-1.jpg';
+import Analytics from '@vercel/analytics/astro';
 import type { ImageMetadata } from 'astro';
 
 interface Props {
@@ -78,3 +79,6 @@ const { title, description, image = FallbackImage } = Astro.props;
 <meta property="twitter:title" content={title} />
 <meta property="twitter:description" content={description} />
 <meta property="twitter:image" content={new URL(image.src, Astro.url)} />
+
+<!-- Vercel Web Analytics -->
+<Analytics />
