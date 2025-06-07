@@ -3,27 +3,62 @@ import HeaderLink from "./HeaderLink.astro";
 import { SITE_TITLE, NAVIGATION } from "../consts";
 ---
 
-<header class="m-0 px-4 bg-white dark:bg-gray-900 shadow-lg border-b border-gray-200 dark:border-gray-700 transition-all duration-300">
-  <nav class="flex items-center justify-between min-h-[60px] max-w-7xl mx-auto">
+<header
+  class="fixed top-0 left-0 right-0 z-50 m-0 px-4 bg-white dark:bg-gray-900 shadow-lg border-b border-gray-200 dark:border-gray-700 transition-all duration-300"
+>
+  <nav class="flex items-center justify-between h-16 max-w-7xl mx-auto">
     <h2 class="m-0 text-base">
-      <a href="/" class="no-underline text-gray-900 dark:text-gray-100 font-semibold hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-300">
+      <a
+        href="/"
+        class="no-underline text-gray-900 dark:text-gray-100 font-semibold hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-300"
+      >
         {SITE_TITLE}
       </a>
     </h2>
-    
-    <div class="flex items-center gap-4 md:flex-row flex-col md:gap-4 gap-2">
-      {NAVIGATION.map(({ href, label }) => (
-        <HeaderLink href={href}>{label}</HeaderLink>
-      ))}
+
+    <div class="hidden md:flex items-center gap-4">
+      {
+        NAVIGATION.map(({ href, label }) => (
+          <HeaderLink href={href}>{label}</HeaderLink>
+        ))
+      }
     </div>
-    
-    <div class="flex items-center gap-4">
-      <button 
-        id="theme-toggle" 
-        class="bg-transparent border-2 border-gray-300 dark:border-gray-600 rounded-full w-10 h-10 cursor-pointer flex items-center justify-center transition-all duration-300 text-gray-700 dark:text-gray-300 hover:border-blue-500 dark:hover:border-blue-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900" 
+
+    <div class="flex items-center gap-2">
+      <!-- 移动端菜单按钮 -->
+      <button
+        id="mobile-menu-button"
+        class="md:hidden bg-transparent border-2 border-gray-300 dark:border-gray-600 rounded-lg w-10 h-10 cursor-pointer flex items-center justify-center transition-all duration-300 text-gray-700 dark:text-gray-300 hover:border-blue-500 dark:hover:border-blue-400 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900"
+        aria-label="切换菜单"
+        aria-expanded="false"
+      >
+        <svg
+          class="menu-icon w-5 h-5 stroke-current fill-none stroke-2"
+          viewBox="0 0 24 24"
+        >
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+        <svg
+          class="close-icon hidden w-5 h-5 stroke-current fill-none stroke-2"
+          viewBox="0 0 24 24"
+        >
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+
+      <!-- 主题切换按钮 -->
+      <button
+        id="theme-toggle"
+        class="bg-transparent border-2 border-gray-300 dark:border-gray-600 rounded-full w-10 h-10 cursor-pointer flex items-center justify-center transition-all duration-300 text-gray-700 dark:text-gray-300 hover:border-blue-500 dark:hover:border-blue-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900"
         aria-label="切换主题"
       >
-        <svg class="sun-icon hidden dark:block w-5 h-5 stroke-current fill-none stroke-2" viewBox="0 0 24 24">
+        <svg
+          class="sun-icon hidden dark:block w-5 h-5 stroke-current fill-none stroke-2"
+          viewBox="0 0 24 24"
+        >
           <circle cx="12" cy="12" r="5"></circle>
           <line x1="12" y1="1" x2="12" y2="3"></line>
           <line x1="12" y1="21" x2="12" y2="23"></line>
@@ -34,23 +69,31 @@ import { SITE_TITLE, NAVIGATION } from "../consts";
           <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
           <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
         </svg>
-        <svg class="moon-icon block dark:hidden w-5 h-5 stroke-current fill-none stroke-2" viewBox="0 0 24 24">
+        <svg
+          class="moon-icon block dark:hidden w-5 h-5 stroke-current fill-none stroke-2"
+          viewBox="0 0 24 24"
+        >
           <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
         </svg>
       </button>
-      
+
+      <!-- 桌面端GitHub链接 -->
       <div class="hidden md:flex gap-2">
-        <a 
-          href="https://github.com/SweetRetry/deep-tech-notes" 
+        <a
+          href="https://github.com/SweetRetry/deep-tech-notes"
           target="_blank"
           class="flex items-center justify-center p-2 rounded-lg transition-all duration-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900"
         >
           <span class="sr-only">Go to Deep Tech Notes GitHub repo</span>
-          <svg viewBox="0 0 16 16" aria-hidden="true" class="w-8 h-8 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-300">
+          <svg
+            viewBox="0 0 16 16"
+            aria-hidden="true"
+            class="w-8 h-8 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-300"
+          >
             <path
               fill="currentColor"
               d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"
-            />
+            ></path>
           </svg>
         </a>
       </div>
@@ -58,20 +101,164 @@ import { SITE_TITLE, NAVIGATION } from "../consts";
   </nav>
 </header>
 
-<!-- 响应式导航菜单 - 移动端 -->
-<div class="md:hidden bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
-  <div class="px-4 py-2 space-y-1">
-    <div class="flex flex-wrap justify-center gap-2">
-      {NAVIGATION.map(({ href, label }) => (
-        <HeaderLink href={href}>{label}</HeaderLink>
-      ))}
-    </div>
+<!-- 移动端下拉菜单 -->
+<div
+  id="mobile-menu"
+  class="md:hidden fixed top-16 left-0 right-0 z-40 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 shadow-lg transition-all duration-300 ease-in-out transform -translate-y-full opacity-0 pointer-events-none"
+>
+  <div class="px-4 py-3 space-y-2">
+    {
+      NAVIGATION.map(({ href, label }) => (
+        <a
+          href={href}
+          class="block px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-blue-600 dark:hover:text-blue-400 rounded-lg transition-all duration-200 text-center font-medium border border-transparent hover:border-gray-200 dark:hover:border-gray-700"
+        >
+          {label}
+        </a>
+      ))
+    }
+    <!-- 移动端GitHub链接 -->
+    <a
+      href="https://github.com/SweetRetry/deep-tech-notes"
+      target="_blank"
+      class="block px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-blue-600 dark:hover:text-blue-400 rounded-lg transition-all duration-200 text-center font-medium border border-transparent hover:border-gray-200 dark:hover:border-gray-700"
+    >
+      <span class="flex items-center justify-center gap-2">
+        <svg
+          viewBox="0 0 16 16"
+          aria-hidden="true"
+          class="w-5 h-5"
+        >
+          <path
+            fill="currentColor"
+            d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"
+          ></path>
+        </svg>
+        GitHub
+      </span>
+    </a>
   </div>
 </div>
 
 <script>
+  // 移动端菜单控制
+  (function () {
+    let isMenuOpen = false;
+
+    // 切换移动端菜单
+    function toggleMobileMenu() {
+      const mobileMenu = document.getElementById("mobile-menu");
+      const menuButton = document.getElementById("mobile-menu-button");
+      const menuIcon = menuButton?.querySelector(".menu-icon");
+      const closeIcon = menuButton?.querySelector(".close-icon");
+
+      if (!mobileMenu || !menuButton) return;
+
+      isMenuOpen = !isMenuOpen;
+
+      if (isMenuOpen) {
+        // 打开菜单
+        mobileMenu.classList.remove("pointer-events-none");
+        
+        // 强制重排，然后添加动画类
+        requestAnimationFrame(() => {
+          mobileMenu.classList.remove("-translate-y-full", "opacity-0");
+          mobileMenu.classList.add("translate-y-0", "opacity-100");
+        });
+        
+        // 切换图标
+        if (menuIcon && closeIcon) {
+          menuIcon.classList.add("hidden");
+          closeIcon.classList.remove("hidden");
+        }
+        
+        menuButton.setAttribute("aria-expanded", "true");
+      } else {
+        // 关闭菜单
+        mobileMenu.classList.remove("translate-y-0", "opacity-100");
+        mobileMenu.classList.add("-translate-y-full", "opacity-0");
+        
+        // 切换图标
+        if (menuIcon && closeIcon) {
+          menuIcon.classList.remove("hidden");
+          closeIcon.classList.add("hidden");
+        }
+        
+        menuButton.setAttribute("aria-expanded", "false");
+        
+        // 等待动画完成后禁用pointer events
+        setTimeout(() => {
+          mobileMenu.classList.add("pointer-events-none");
+        }, 300);
+      }
+    }
+
+    // 点击菜单外部时关闭菜单
+    function handleClickOutside(event: Event) {
+      const mobileMenu = document.getElementById("mobile-menu");
+      const menuButton = document.getElementById("mobile-menu-button");
+      
+      if (!mobileMenu || !menuButton || !isMenuOpen) return;
+      
+      const target = event.target as Element;
+      if (!mobileMenu.contains(target) && !menuButton.contains(target)) {
+        toggleMobileMenu();
+      }
+    }
+
+    // 点击菜单项后关闭菜单
+    function handleMenuItemClick() {
+      if (isMenuOpen) {
+        toggleMobileMenu();
+      }
+    }
+
+    // 初始化移动端菜单
+    function initMobileMenu() {
+      const menuButton = document.getElementById("mobile-menu-button");
+      const mobileMenu = document.getElementById("mobile-menu");
+      
+      if (menuButton) {
+        menuButton.addEventListener("click", toggleMobileMenu);
+      }
+      
+      // 为菜单项添加点击事件
+      if (mobileMenu) {
+        const menuItems = mobileMenu.querySelectorAll("a");
+        menuItems.forEach(item => {
+          item.addEventListener("click", handleMenuItemClick);
+        });
+      }
+      
+      // 添加点击外部关闭菜单的事件
+      document.addEventListener("click", handleClickOutside);
+      
+      // ESC键关闭菜单
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && isMenuOpen) {
+          toggleMobileMenu();
+        }
+      });
+    }
+
+    // 清理函数
+    function cleanup() {
+      document.removeEventListener("click", handleClickOutside);
+    }
+
+    // 页面卸载时清理
+    window.addEventListener("beforeunload", cleanup);
+
+    // 确保DOM加载完成后执行
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", initMobileMenu);
+    } else {
+      initMobileMenu();
+    }
+  })();
+
   // 主题切换功能 - 简化版，主题初始化已在BaseHead中完成
-  (function() {
+  (function () {
     // 设置主题
     function setTheme(theme: string) {
       document.documentElement.setAttribute("data-theme", theme);
@@ -112,7 +299,8 @@ import { SITE_TITLE, NAVIGATION } from "../consts";
 
     // 切换主题
     function toggleTheme() {
-      const currentTheme = document.documentElement.getAttribute("data-theme") || "light";
+      const currentTheme =
+        document.documentElement.getAttribute("data-theme") || "light";
       const newTheme = currentTheme === "light" ? "dark" : "light";
       setTheme(newTheme);
     }
@@ -128,13 +316,16 @@ import { SITE_TITLE, NAVIGATION } from "../consts";
 
     // 获取系统主题
     function getSystemTheme() {
-      return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      return window.matchMedia("(prefers-color-scheme: dark)").matches
+        ? "dark"
+        : "light";
     }
 
     // 初始化 - 只需要设置图标和事件监听器
     function initHeader() {
       // 更新图标以匹配当前主题
-      const currentTheme = document.documentElement.getAttribute("data-theme") || "light";
+      const currentTheme =
+        document.documentElement.getAttribute("data-theme") || "light";
       updateToggleIcon(currentTheme);
 
       // 添加点击事件监听器
@@ -161,5 +352,3 @@ import { SITE_TITLE, NAVIGATION } from "../consts";
     }
   })();
 </script>
-
-
