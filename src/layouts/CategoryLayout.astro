@@ -2,6 +2,7 @@
 import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import SpeedInsights from '../components/SpeedInsights.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
 import { getCollection } from 'astro:content';
@@ -89,6 +90,7 @@ const posts = sortPostsByDate(await getCollection(collection) as PostType[]);
 			</section>
 		</main>
 		<Footer />
+		<SpeedInsights />
 	</body>
 </html>
 

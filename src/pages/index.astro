@@ -2,6 +2,7 @@
 import BaseHead from "../components/BaseHead.astro";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
+import SpeedInsights from "../components/SpeedInsights.astro";
 import { SITE_TITLE, SITE_DESCRIPTION } from "../consts";
 import { getCollection } from "astro:content";
 
@@ -313,5 +314,6 @@ const languagePosts = await getCollection("language");
       </section>
     </main>
     <Footer />
+    <SpeedInsights />
   </body>
 </html>
