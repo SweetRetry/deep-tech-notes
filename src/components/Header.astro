@@ -1,5 +1,6 @@
 ---
 import HeaderLink from "./HeaderLink.astro";
+import Drawer from "./Drawer.astro";
 import { SITE_TITLE, NAVIGATION } from "../consts";
 ---
 
@@ -29,7 +30,7 @@ import { SITE_TITLE, NAVIGATION } from "../consts";
       <button
         id="mobile-menu-button"
         class="md:hidden bg-transparent border-2 border-gray-300 dark:border-gray-600 rounded-lg w-10 h-10 cursor-pointer flex items-center justify-center transition-all duration-300 text-gray-700 dark:text-gray-300 hover:border-blue-500 dark:hover:border-blue-400 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900"
-        aria-label="切换菜单"
+        aria-label="打开菜单"
         aria-expanded="false"
       >
         <svg
@@ -101,155 +102,188 @@ import { SITE_TITLE, NAVIGATION } from "../consts";
   </nav>
 </header>
 
-<!-- 移动端下拉菜单 -->
-<div
-  id="mobile-menu"
-  class="md:hidden fixed top-16 left-0 right-0 z-40 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 shadow-lg transition-all duration-300 ease-in-out transform -translate-y-full opacity-0 pointer-events-none"
+<!-- 移动端抽屉菜单 -->
+<Drawer 
+  id="mobile-menu" 
+  position="right" 
+  size="30rem" 
+  maxSize="85vw" 
+  class="md:hidden"
 >
-  <div class="px-4 py-3 space-y-2">
-    {
-      NAVIGATION.map(({ href, label }) => (
-        <a
-          href={href}
-          class="block px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-blue-600 dark:hover:text-blue-400 rounded-lg transition-all duration-200 text-center font-medium border border-transparent hover:border-gray-200 dark:hover:border-gray-700"
-        >
-          {label}
-        </a>
-      ))
-    }
-    <!-- 移动端GitHub链接 -->
-    <a
-      href="https://github.com/SweetRetry/deep-tech-notes"
-      target="_blank"
-      class="block px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-blue-600 dark:hover:text-blue-400 rounded-lg transition-all duration-200 text-center font-medium border border-transparent hover:border-gray-200 dark:hover:border-gray-700"
+  <!-- 抽屉头部 -->
+  <div class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
+    <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">
+      {SITE_TITLE}
+    </h3>
+    <button
+      id="drawer-close-button"
+      class="p-2 rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900"
+      aria-label="关闭菜单"
     >
-      <span class="flex items-center justify-center gap-2">
-        <svg viewBox="0 0 16 16" aria-hidden="true" class="w-5 h-5">
+      <svg class="w-5 h-5 stroke-current fill-none stroke-2" viewBox="0 0 24 24">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+  </div>
+
+  <!-- 抽屉内容 -->
+  <div class="flex flex-col h-full">
+    <!-- 导航菜单 -->
+    <nav class="flex-1 px-4 py-6 space-y-2">
+      {
+        NAVIGATION.map(({ href, label }) => (
+          <a
+            href={href}
+            class="flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-blue-600 dark:hover:text-blue-400 rounded-lg transition-all duration-200 font-medium group"
+          >
+            <span class="transition-transform duration-200 group-hover:-translate-x-1">
+              {label}
+            </span>
+          </a>
+        ))
+      }
+    </nav>
+
+    <!-- 抽屉底部 -->
+    <div class="px-4 py-4 border-t border-gray-200 dark:border-gray-700">
+      <!-- GitHub链接 -->
+      <a
+        href="https://github.com/SweetRetry/deep-tech-notes"
+        target="_blank"
+        class="flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-blue-600 dark:hover:text-blue-400 rounded-lg transition-all duration-200 font-medium group"
+      >
+        <svg viewBox="0 0 16 16" aria-hidden="true" class="w-5 h-5 mr-3 flex-shrink-0">
           <path
             fill="currentColor"
             d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"
           ></path>
         </svg>
-        GitHub
-      </span>
-    </a>
+        <span class="transition-transform duration-200 group-hover:-translate-x-1">
+          GitHub
+        </span>
+      </a>
+    </div>
   </div>
-</div>
+</Drawer>
 
 <script>
-  // 移动端菜单控制
+  // 移动端抽屉菜单控制 - 使用Drawer组件
   (function () {
-    let isMenuOpen = false;
+    const DRAWER_ID = "mobile-menu";
 
-    // 切换移动端菜单
+    // 切换移动端抽屉菜单
     function toggleMobileMenu() {
-      const mobileMenu = document.getElementById("mobile-menu");
+      if (window.drawerManager) {
+        window.drawerManager.toggle(DRAWER_ID);
+        updateMenuButtonState();
+      }
+    }
+
+    // 更新菜单按钮状态
+    function updateMenuButtonState() {
       const menuButton = document.getElementById("mobile-menu-button");
       const menuIcon = menuButton?.querySelector(".menu-icon");
       const closeIcon = menuButton?.querySelector(".close-icon");
 
-      if (!mobileMenu || !menuButton) return;
+      if (!menuButton || !window.drawerManager) return;
 
-      isMenuOpen = !isMenuOpen;
+      const isOpen = window.drawerManager.isOpen(DRAWER_ID);
 
-      if (isMenuOpen) {
-        // 打开菜单
-        mobileMenu.classList.remove("pointer-events-none");
-
-        // 强制重排，然后添加动画类
-        requestAnimationFrame(() => {
-          mobileMenu.classList.remove("-translate-y-full", "opacity-0");
-          mobileMenu.classList.add("translate-y-0", "opacity-100");
-        });
-
-        // 切换图标
-        if (menuIcon && closeIcon) {
+      // 切换图标
+      if (menuIcon && closeIcon) {
+        if (isOpen) {
           menuIcon.classList.add("hidden");
           closeIcon.classList.remove("hidden");
-        }
-
-        menuButton.setAttribute("aria-expanded", "true");
-      } else {
-        // 关闭菜单
-        mobileMenu.classList.remove("translate-y-0", "opacity-100");
-        mobileMenu.classList.add("-translate-y-full", "opacity-0");
-
-        // 切换图标
-        if (menuIcon && closeIcon) {
+        } else {
           menuIcon.classList.remove("hidden");
           closeIcon.classList.add("hidden");
         }
-
-        menuButton.setAttribute("aria-expanded", "false");
-
-        // 等待动画完成后禁用pointer events
-        setTimeout(() => {
-          mobileMenu.classList.add("pointer-events-none");
-        }, 300);
       }
+
+      // 更新ARIA属性
+      menuButton.setAttribute("aria-expanded", isOpen.toString());
+      menuButton.setAttribute("aria-label", isOpen ? "关闭菜单" : "打开菜单");
     }
 
-    // 点击菜单外部时关闭菜单
-    function handleClickOutside(event: Event) {
-      const mobileMenu = document.getElementById("mobile-menu");
-      const menuButton = document.getElementById("mobile-menu-button");
-
-      if (!mobileMenu || !menuButton || !isMenuOpen) return;
-
-      const target = event.target as Element;
-      if (!mobileMenu.contains(target) && !menuButton.contains(target)) {
-        toggleMobileMenu();
-      }
-    }
-
-    // 点击菜单项后关闭菜单
+    // 点击菜单项后关闭抽屉
     function handleMenuItemClick() {
-      if (isMenuOpen) {
-        toggleMobileMenu();
+      if (window.drawerManager?.isOpen(DRAWER_ID)) {
+        window.drawerManager.close(DRAWER_ID);
       }
     }
 
-    // 初始化移动端菜单
+    // 初始化移动端抽屉菜单
     function initMobileMenu() {
       const menuButton = document.getElementById("mobile-menu-button");
+      const drawerCloseButton = document.getElementById("drawer-close-button");
       const mobileMenu = document.getElementById("mobile-menu");
 
+      // 菜单按钮点击事件
       if (menuButton) {
         menuButton.addEventListener("click", toggleMobileMenu);
       }
 
+      // 抽屉关闭按钮点击事件
+      if (drawerCloseButton) {
+        drawerCloseButton.addEventListener("click", () => {
+          if (window.drawerManager) {
+            window.drawerManager.close(DRAWER_ID);
+          }
+        });
+      }
+
       // 为菜单项添加点击事件
       if (mobileMenu) {
-        const menuItems = mobileMenu.querySelectorAll("a");
+        const menuItems = mobileMenu.querySelectorAll("nav a, .px-4.py-4 a");
         menuItems.forEach((item) => {
           item.addEventListener("click", handleMenuItemClick);
         });
       }
 
-      // 添加点击外部关闭菜单的事件
-      document.addEventListener("click", handleClickOutside);
+      // 监听抽屉开关事件，更新按钮状态
+      if (mobileMenu) {
+        mobileMenu.addEventListener("drawer:open", updateMenuButtonState);
+        mobileMenu.addEventListener("drawer:close", updateMenuButtonState);
+      }
 
-      // ESC键关闭菜单
-      document.addEventListener("keydown", (event) => {
-        if (event.key === "Escape" && isMenuOpen) {
-          toggleMobileMenu();
+      // 处理窗口大小变化，在大屏幕时自动关闭抽屉
+      window.addEventListener("resize", () => {
+        if (window.innerWidth >= 768 && window.drawerManager?.isOpen(DRAWER_ID)) {
+          window.drawerManager.close(DRAWER_ID);
+        }
+      });
+
+      // 监听页面导航，关闭抽屉（兼容Astro客户端路由）
+      document.addEventListener("astro:page-load", () => {
+        if (window.drawerManager?.isOpen(DRAWER_ID)) {
+          window.drawerManager.close(DRAWER_ID);
+        }
+      });
+
+      // 为了兼容常规导航，也监听popstate事件
+      window.addEventListener("popstate", () => {
+        if (window.drawerManager?.isOpen(DRAWER_ID)) {
+          window.drawerManager.close(DRAWER_ID);
         }
       });
     }
 
-    // 清理函数
-    function cleanup() {
-      document.removeEventListener("click", handleClickOutside);
+    // 确保DOM和DrawerManager都加载完成后执行
+    function waitForDrawerManager() {
+      if (window.drawerManager) {
+        initMobileMenu();
+      } else {
+        // 如果DrawerManager还没有加载，等待一下再检查
+        setTimeout(waitForDrawerManager, 50);
+      }
     }
-
-    // 页面卸载时清理
-    window.addEventListener("beforeunload", cleanup);
 
     // 确保DOM加载完成后执行
     if (document.readyState === "loading") {
-      document.addEventListener("DOMContentLoaded", initMobileMenu);
+      document.addEventListener("DOMContentLoaded", waitForDrawerManager);
     } else {
-      initMobileMenu();
+      waitForDrawerManager();
     }
   })();
 

@@ -1,0 +1,307 @@
+---
+export interface Props {
+  id: string;
+  position?: "left" | "right" | "top" | "bottom";
+  size?: string;
+  maxSize?: string;
+  overlayId?: string;
+  class?: string;
+}
+
+const {
+  id,
+  position = "left",
+  size = "20rem", // 320px
+  maxSize = "85vw",
+  overlayId = `${id}-overlay`,
+  class: className = "",
+} = Astro.props;
+
+// 根据位置设置不同的样式类和内联样式
+const getPositionConfig = (pos: string) => {
+  switch (pos) {
+    case "right":
+      return {
+        classes: "top-0 right-0 bottom-0 translate-x-full",
+        style: `width: ${size}; max-width: ${maxSize};`,
+        transform: {
+          open: "translate-x-0",
+          close: "translate-x-full"
+        }
+      };
+    case "left":
+      return {
+        classes: "top-0 left-0 bottom-0 -translate-x-full",
+        style: `width: ${size}; max-width: ${maxSize};`,
+        transform: {
+          open: "translate-x-0",
+          close: "-translate-x-full"
+        }
+      };
+    case "top":
+      return {
+        classes: "top-0 left-0 right-0 -translate-y-full",
+        style: `height: ${size}; max-height: ${maxSize};`,
+        transform: {
+          open: "translate-y-0",
+          close: "-translate-y-full"
+        }
+      };
+    case "bottom":
+      return {
+        classes: "bottom-0 left-0 right-0 translate-y-full",
+        style: `height: ${size}; max-height: ${maxSize};`,
+        transform: {
+          open: "translate-y-0",
+          close: "translate-y-full"
+        }
+      };
+    default:
+      return {
+        classes: "top-0 left-0 bottom-0 -translate-x-full",
+        style: `width: ${size}; max-width: ${maxSize};`,
+        transform: {
+          open: "translate-x-0",
+          close: "-translate-x-full"
+        }
+      };
+  }
+};
+
+const positionConfig = getPositionConfig(position);
+---
+
+<!-- 抽屉遮罩 -->
+<div
+  id={overlayId}
+  class="fixed inset-0 z-40 bg-black bg-opacity-50 transition-opacity duration-300 ease-in-out opacity-0 pointer-events-none"
+  data-drawer-overlay={id}
+></div>
+
+<!-- 抽屉主体 -->
+<div
+  id={id}
+  class={`fixed z-50 ${positionConfig.classes} bg-white dark:bg-gray-900 shadow-xl transform transition-transform duration-300 ease-in-out ${className}`}
+  style={positionConfig.style}
+  data-drawer-position={position}
+  data-drawer-transform-open={positionConfig.transform.open}
+  data-drawer-transform-close={positionConfig.transform.close}
+>
+  <slot />
+</div>
+
+<script>
+  interface DrawerInstance {
+    id: string;
+    position: string;
+    isOpen: boolean;
+    element: HTMLElement;
+    overlay: HTMLElement;
+    transformOpen: string;
+    transformClose: string;
+    onOpen?: () => void;
+    onClose?: () => void;
+  }
+
+  class DrawerManager {
+    private drawers: Map<string, DrawerInstance> = new Map();
+
+    // 注册抽屉
+    register(
+      id: string,
+      element: HTMLElement,
+      overlay: HTMLElement,
+      options: {
+        position: string;
+        transformOpen: string;
+        transformClose: string;
+        onOpen?: () => void;
+        onClose?: () => void;
+      }
+    ) {
+      const drawer: DrawerInstance = {
+        id,
+        position: options.position,
+        isOpen: false,
+        element,
+        overlay,
+        transformOpen: options.transformOpen,
+        transformClose: options.transformClose,
+        onOpen: options.onOpen,
+        onClose: options.onClose,
+      };
+
+      this.drawers.set(id, drawer);
+      this.initializeDrawer(drawer);
+    }
+
+    // 初始化抽屉事件
+    private initializeDrawer(drawer: DrawerInstance) {
+      // ESC键关闭
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && drawer.isOpen) {
+          this.close(drawer.id);
+        }
+      });
+
+      // 点击遮罩关闭
+      drawer.overlay.addEventListener("click", () => {
+        if (drawer.isOpen) {
+          this.close(drawer.id);
+        }
+      });
+    }
+
+    // 打开抽屉
+    open(id: string) {
+      const drawer = this.drawers.get(id);
+      if (!drawer || drawer.isOpen) return;
+
+      // 关闭其他打开的抽屉
+      this.closeAll();
+
+      drawer.isOpen = true;
+
+      // 显示遮罩
+      drawer.overlay.classList.remove("pointer-events-none", "opacity-0");
+      drawer.overlay.classList.add("opacity-100");
+
+      // 禁用body滚动
+      document.body.style.overflow = "hidden";
+
+      // 显示抽屉
+      requestAnimationFrame(() => {
+        drawer.element.classList.remove(...drawer.transformClose.split(" "));
+        drawer.element.classList.add(...drawer.transformOpen.split(" "));
+      });
+
+      // 触发回调
+      drawer.onOpen?.();
+
+      // 派发自定义事件
+      drawer.element.dispatchEvent(
+        new CustomEvent("drawer:open", { detail: { id } })
+      );
+    }
+
+    // 关闭抽屉
+    close(id: string) {
+      const drawer = this.drawers.get(id);
+      if (!drawer || !drawer.isOpen) return;
+
+      drawer.isOpen = false;
+
+      // 隐藏抽屉
+      drawer.element.classList.remove(...drawer.transformOpen.split(" "));
+      drawer.element.classList.add(...drawer.transformClose.split(" "));
+
+      // 隐藏遮罩
+      drawer.overlay.classList.remove("opacity-100");
+      drawer.overlay.classList.add("opacity-0");
+
+      // 恢复body滚动
+      document.body.style.overflow = "";
+
+      // 等待动画完成后禁用遮罩pointer events
+      setTimeout(() => {
+        drawer.overlay.classList.add("pointer-events-none");
+      }, 300);
+
+      // 触发回调
+      drawer.onClose?.();
+
+      // 派发自定义事件
+      drawer.element.dispatchEvent(
+        new CustomEvent("drawer:close", { detail: { id } })
+      );
+    }
+
+    // 切换抽屉状态
+    toggle(id: string) {
+      const drawer = this.drawers.get(id);
+      if (!drawer) return;
+
+      if (drawer.isOpen) {
+        this.close(id);
+      } else {
+        this.open(id);
+      }
+    }
+
+    // 关闭所有抽屉
+    closeAll() {
+      this.drawers.forEach((drawer) => {
+        if (drawer.isOpen) {
+          this.close(drawer.id);
+        }
+      });
+    }
+
+    // 获取抽屉状态
+    isOpen(id: string): boolean {
+      const drawer = this.drawers.get(id);
+      return drawer?.isOpen || false;
+    }
+
+    // 销毁抽屉
+    destroy(id: string) {
+      const drawer = this.drawers.get(id);
+      if (drawer && drawer.isOpen) {
+        this.close(id);
+      }
+      this.drawers.delete(id);
+    }
+  }
+
+  // 全局抽屉管理器
+  declare global {
+    interface Window {
+      drawerManager: DrawerManager;
+    }
+  }
+
+  window.drawerManager = window.drawerManager || new DrawerManager();
+
+  // 自动初始化页面上的抽屉
+  function initializeDrawers() {
+    const drawers = document.querySelectorAll("[data-drawer-position]");
+    
+    drawers.forEach((drawerElement) => {
+      const id = drawerElement.id;
+      const position = drawerElement.getAttribute("data-drawer-position") || "left";
+      const transformOpen = drawerElement.getAttribute("data-drawer-transform-open") || "translate-x-0";
+      const transformClose = drawerElement.getAttribute("data-drawer-transform-close") || "translate-x-full";
+      const overlayId = `${id}-overlay`;
+      const overlay = document.getElementById(overlayId);
+
+      if (overlay && drawerElement instanceof HTMLElement) {
+        window.drawerManager.register(id, drawerElement, overlay, {
+          position,
+          transformOpen,
+          transformClose,
+        });
+      }
+    });
+  }
+
+  // 确保DOM加载完成后执行
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initializeDrawers);
+  } else {
+    initializeDrawers();
+  }
+
+  // 为Astro页面导航重新初始化
+  document.addEventListener("astro:page-load", initializeDrawers);
+</script>
+
+<style>
+  /* 确保抽屉在适当的z-index层级 */
+  [data-drawer-overlay] {
+    z-index: 40;
+  }
+  
+  [data-drawer-position] {
+    z-index: 50;
+  }
+</style> 
