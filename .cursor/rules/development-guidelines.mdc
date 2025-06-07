@@ -1,0 +1,72 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Development Guidelines
+
+## Astro Component Development
+
+### Component Structure
+- Use `.astro` extension for Astro components
+- Follow the component structure in [BaseHead.astro](mdc:src/components/BaseHead.astro) for SEO components
+- Place reusable components in `src/components/`
+- Use TypeScript for component props and interfaces
+
+### Layout Components
+- Blog posts should use [BlogPost.astro](mdc:src/layouts/BlogPost.astro) layout
+- Category pages should use [CategoryLayout.astro](mdc:src/layouts/CategoryLayout.astro) layout
+- Layouts should include proper head tags via [BaseHead.astro](mdc:src/components/BaseHead.astro)
+
+### Navigation
+- Main navigation is handled by [Header.astro](mdc:src/components/Header.astro)
+- Use [HeaderLink.astro](mdc:src/components/HeaderLink.astro) for consistent navigation links
+- Implement responsive navigation with mobile-friendly design
+
+## Content Collections
+
+### Content Configuration
+- Content types are defined in [content.config.ts](mdc:src/content.config.ts)
+- All blog posts must follow the schema defined in content collections
+- Use frontmatter for post metadata (title, description, pubDate, etc.)
+
+### Content Organization
+- Organize content in `src/content/` by category
+- Each category should have its own subdirectory
+- Use consistent naming conventions for content files
+
+## Styling Guidelines
+
+### Tailwind CSS
+- All styling should use Tailwind CSS classes
+- Configuration is in [tailwind.config.js](mdc:tailwind.config.js)
+- Use responsive design principles
+- Implement dark mode support where applicable
+
+### Typography
+- Use Tailwind Typography plugin for content styling
+- Ensure consistent spacing and typography across all pages
+- Implement proper heading hierarchy
+
+## SEO and Performance
+
+### Meta Tags
+- Use [BaseHead.astro](mdc:src/components/BaseHead.astro) for all meta tags
+- Include proper OpenGraph and Twitter Card tags
+- Ensure all pages have unique titles and descriptions
+
+### Analytics
+- Vercel Analytics is configured in [astro.config.mjs](mdc:astro.config.mjs)
+- Speed Insights component is in [SpeedInsights.astro](mdc:src/components/SpeedInsights.astro)
+
+## Accessibility
+
+### Table of Contents
+- Use [TableOfContents.astro](mdc:src/components/TableOfContents.astro) for desktop
+- Use [MobileTOC.astro](mdc:src/components/MobileTOC.astro) for mobile
+- Ensure proper heading structure for screen readers
+
+### Semantic HTML
+- Use proper semantic HTML elements
+- Include alt text for images
+- Ensure keyboard navigation works properly

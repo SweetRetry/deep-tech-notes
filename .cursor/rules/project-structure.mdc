@@ -1,0 +1,50 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Astro Blog Project Structure Guide
+
+This Astro blog project follows a structured approach for content management and organization.
+
+## Core Configuration Files
+
+- [astro.config.mjs](mdc:astro.config.mjs) - Main Astro configuration with MDX, sitemap, Vercel adapter, and Tailwind CSS
+- [package.json](mdc:package.json) - Dependencies including Astro, MDX, RSS, sitemap, and Vercel analytics
+- [tailwind.config.js](mdc:tailwind.config.js) - Tailwind CSS configuration for styling
+- [tsconfig.json](mdc:tsconfig.json) - TypeScript configuration
+
+## Source Structure
+
+### Pages Directory
+The `src/pages/` directory contains:
+- [index.astro](mdc:src/pages/index.astro) - Homepage with blog categories overview
+- Category pages: `language.astro`, `infra.astro`, `engineering.astro`, `browser.astro`
+- Dynamic category directories for individual posts
+
+### Layouts
+- [BlogPost.astro](mdc:src/layouts/BlogPost.astro) - Layout for individual blog posts
+- [CategoryLayout.astro](mdc:src/layouts/CategoryLayout.astro) - Layout for category listing pages
+
+### Components
+Key components in `src/components/`:
+- [Header.astro](mdc:src/components/Header.astro) - Main navigation header
+- [BaseHead.astro](mdc:src/components/BaseHead.astro) - HTML head with SEO meta tags
+- [TableOfContents.astro](mdc:src/components/TableOfContents.astro) - TOC for blog posts
+- [MobileTOC.astro](mdc:src/components/MobileTOC.astro) - Mobile-friendly table of contents
+- [CategoryCard.astro](mdc:src/components/CategoryCard.astro) - Category preview cards
+- [Footer.astro](mdc:src/components/Footer.astro) - Site footer
+
+### Content Management
+- [content.config.ts](mdc:src/content.config.ts) - Content collections configuration
+- `src/content/` - Organized by categories: `language/`, `infra/`, `engineering/`, `browser/`
+- [consts.ts](mdc:src/consts.ts) - Site constants and configuration
+
+## Blog Categories
+The blog is organized into four main categories:
+1. **Language** - Programming languages and syntax
+2. **Infrastructure** - DevOps, deployment, and system architecture
+3. **Engineering** - Software engineering practices and methodologies
+4. **Browser** - Frontend development and browser technologies
+
+Each category has its own content directory and routing structure.

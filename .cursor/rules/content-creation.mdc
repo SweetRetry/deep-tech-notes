@@ -1,0 +1,90 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Content Creation Guidelines
+
+## Blog Post Creation
+
+### Frontmatter Structure
+Every blog post should include the following frontmatter:
+```yaml
+---
+title: "Post Title"
+description: "Brief description for SEO"
+pubDate: "YYYY-MM-DD"
+heroImage: "/path/to/image.jpg" # Optional
+tags: ["tag1", "tag2"] # Optional
+---
+```
+
+### Content Categories
+The blog supports four main categories:
+
+1. **Language** (`src/content/language/`)
+   - Programming language tutorials
+   - Syntax guides and examples
+   - Language-specific best practices
+
+2. **Infrastructure** (`src/content/infra/`)
+   - DevOps tutorials
+   - Deployment guides
+   - System architecture discussions
+
+3. **Engineering** (`src/content/engineering/`)
+   - Software engineering practices
+   - Code quality and testing
+   - Project management methodologies
+
+4. **Browser** (`src/content/browser/`)
+   - Frontend development
+   - Browser APIs and features
+   - Web performance optimization
+
+### File Organization
+- Use kebab-case for file names (e.g., `my-awesome-post.md`)
+- Place files in the appropriate category directory
+- Use `.md` or `.mdx` extensions for content files
+- Include images in `src/assets/` and reference them properly
+
+### Content Writing Guidelines
+
+#### Headings
+- Use proper heading hierarchy (H1 for title, H2 for main sections, etc.)
+- Headings are automatically linked via rehype-autolink-headings in [astro.config.mjs](mdc:astro.config.mjs)
+- This enables the Table of Contents functionality in [TableOfContents.astro](mdc:src/components/TableOfContents.astro)
+
+#### Code Blocks
+- Use syntax highlighting with language specification
+- Include comments for complex code examples
+- Keep code examples focused and relevant
+
+#### Images
+- Optimize images for web (WebP format preferred)
+- Include descriptive alt text
+- Use responsive image sizing
+
+### MDX Features
+- MDX is configured in [astro.config.mjs](mdc:astro.config.mjs)
+- You can import and use Astro components within MDX files
+- Use JSX syntax for interactive elements
+
+## Content Schema
+The content schema is defined in [content.config.ts](mdc:src/content.config.ts). Ensure all posts conform to:
+- Required fields: title, description, pubDate
+- Optional fields: heroImage, tags, updatedDate
+- Proper data types for each field
+
+## SEO Optimization
+- Write compelling titles (50-60 characters)
+- Create descriptive meta descriptions (150-160 characters)
+- Use relevant tags for categorization
+- Include internal links to related posts
+- Optimize images with proper alt text
+
+## Publishing Workflow
+1. Create content in the appropriate category directory
+2. Test locally using `npm run dev`
+3. Build and preview using `npm run build && npm run preview`
+4. Deploy via Vercel (configured in [astro.config.mjs](mdc:astro.config.mjs))

@@ -1,0 +1,124 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Troubleshooting & Best Practices
+
+## Common Issues & Solutions
+
+### Build Errors
+
+#### Content Collection Issues
+- Ensure all posts in `src/content/` follow the schema in [content.config.ts](mdc:src/content.config.ts)
+- Check frontmatter syntax for missing or incorrect fields
+- Verify pubDate format is YYYY-MM-DD
+- Make sure all required fields (title, description, pubDate) are present
+
+#### TypeScript Errors
+- Check [tsconfig.json](mdc:tsconfig.json) configuration
+- Ensure proper type imports in component files
+- Verify Astro component prop types are correctly defined
+
+#### Tailwind CSS Issues
+- Check class names against [tailwind.config.js](mdc:tailwind.config.js)
+- Ensure Tailwind is properly imported in layouts
+- Verify responsive classes are applied correctly
+
+### Development Server Issues
+
+#### Hot Reload Problems
+- Restart the dev server (`npm run dev`)
+- Clear Astro cache (`.astro` directory)
+- Check for syntax errors in recently modified files
+
+#### Component Not Updating
+- Verify component imports are correct
+- Check file paths and case sensitivity
+- Ensure component is properly exported
+
+### Performance Issues
+
+#### Slow Build Times
+- Check for large images that need optimization
+- Verify Sharp is properly installed for image processing
+- Remove unused dependencies from [package.json](mdc:package.json)
+
+#### Runtime Performance
+- Use the [SpeedInsights.astro](mdc:src/components/SpeedInsights.astro) component to monitor
+- Optimize images using WebP format
+- Minimize JavaScript bundle size
+
+## Best Practices
+
+### Component Development
+
+#### Reusability
+- Create reusable components like [HeaderLink.astro](mdc:src/components/HeaderLink.astro)
+- Use consistent prop interfaces across similar components
+- Follow the patterns established in [BaseHead.astro](mdc:src/components/BaseHead.astro)
+
+#### Performance
+- Use Astro's component islands for interactivity
+- Minimize client-side JavaScript
+- Leverage static site generation benefits
+
+### Content Management
+
+#### Consistency
+- Follow naming conventions (kebab-case for files)
+- Use consistent frontmatter structure across all posts
+- Maintain proper category organization in `src/content/`
+
+#### SEO
+- Always include meta descriptions
+- Use descriptive titles and headings
+- Implement proper heading hierarchy for [TableOfContents.astro](mdc:src/components/TableOfContents.astro)
+
+### Code Quality
+
+#### TypeScript Usage
+- Define proper interfaces for component props
+- Use strict type checking
+- Leverage Astro's built-in TypeScript support
+
+#### Styling
+- Use Tailwind utility classes consistently
+- Implement responsive design patterns
+- Follow the theme configuration in [tailwind.config.js](mdc:tailwind.config.js)
+
+## Debugging Tips
+
+### Development Tools
+- Use browser dev tools for layout debugging
+- Check Astro dev server logs for build warnings
+- Use TypeScript compiler for type checking
+
+### Common Debug Steps
+1. Check the browser console for JavaScript errors
+2. Verify file paths and imports
+3. Ensure all dependencies are installed (`npm install`)
+4. Clear browser cache and Astro build cache
+5. Test in incognito/private browsing mode
+
+### Component Debugging
+- Add console.log statements in component scripts
+- Use browser dev tools to inspect rendered HTML
+- Check component props are being passed correctly
+
+## Maintenance
+
+### Regular Updates
+- Keep dependencies updated in [package.json](mdc:package.json)
+- Monitor Astro releases for new features
+- Update Tailwind CSS for latest utilities
+
+### Content Audits
+- Review and update old blog posts
+- Check for broken links and images
+- Ensure consistent formatting across posts
+
+### Performance Monitoring
+- Use Vercel Analytics dashboard
+- Monitor Core Web Vitals via [SpeedInsights.astro](mdc:src/components/SpeedInsights.astro)
+- Regular lighthouse audits for performance optimization

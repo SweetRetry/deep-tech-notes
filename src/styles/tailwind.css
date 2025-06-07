@@ -6,3 +6,122 @@
 /* 配置黑暗模式变体 - Tailwind v4语法 */
 @variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
+/* CSS Custom Properties for Colors */
+:root {
+  /* Primary Colors */
+  --color-primary-50: #eff6ff;
+  --color-primary-100: #dbeafe;
+  --color-primary-200: #bfdbfe;
+  --color-primary-300: #93c5fd;
+  --color-primary-400: #60a5fa;
+  --color-primary-500: #3b82f6;
+  --color-primary-600: #2563eb;
+  --color-primary-700: #1d4ed8;
+  --color-primary-800: #1e40af;
+  --color-primary-900: #1e3a8a;
+
+  /* Gray Scale */
+  --color-gray-50: #f9fafb;
+  --color-gray-100: #f3f4f6;
+  --color-gray-200: #e5e7eb;
+  --color-gray-300: #d1d5db;
+  --color-gray-400: #9ca3af;
+  --color-gray-500: #6b7280;
+  --color-gray-600: #4b5563;
+  --color-gray-700: #374151;
+  --color-gray-800: #1f2937;
+  --color-gray-900: #111827;
+
+  /* Semantic Colors */
+  --color-success-500: #10b981;
+  --color-success-600: #059669;
+  --color-warning-500: #f59e0b;
+  --color-warning-600: #d97706;
+  --color-error-500: #ef4444;
+  --color-error-600: #dc2626;
+  --color-info-500: #3b82f6;
+  --color-info-600: #2563eb;
+
+  /* Purple Theme */
+  --color-purple-500: #a855f7;
+  --color-purple-600: #9333ea;
+  --color-purple-700: #7c3aed;
+  --color-purple-400: #a78bfa;
+  --color-purple-300: #c4b5fd;
+  --color-purple-200: #ddd6fe;
+
+  /* Indigo Theme */
+  --color-indigo-500: #6366f1;
+  --color-indigo-600: #4f46e5;
+  --color-indigo-400: #818cf8;
+
+  /* Orange Theme */
+  --color-orange-500: #f97316;
+  --color-orange-600: #ea580c;
+  --color-orange-700: #c2410c;
+
+  /* Green Theme */
+  --color-green-500: #22c55e;
+  --color-green-600: #16a34a;
+  --color-green-700: #15803d;
+
+  /* Category Gradients */
+  --gradient-browser: linear-gradient(45deg, #646cff, #42d392);
+  --gradient-engineering: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+  --gradient-infra: linear-gradient(45deg, #f59e0b, #ef4444);
+  --gradient-language: linear-gradient(45deg, #a855f7, #3b82f6);
+
+  /* Light Theme Semantic Variables */
+  --color-text-primary: var(--color-gray-900);
+  --color-text-secondary: var(--color-gray-700);
+  --color-text-muted: var(--color-gray-500);
+  --color-background-primary: #ffffff;
+  --color-background-secondary: var(--color-gray-50);
+  --color-background-elevated: #ffffff;
+  --color-border: var(--color-gray-200);
+  --color-border-hover: var(--color-gray-300);
+  
+  /* TOC Specific Colors */
+  --color-toc-link: var(--color-gray-500);
+  --color-toc-link-hover: var(--color-gray-700);
+  --color-toc-background-hover: var(--color-gray-100);
+  --color-toc-border-hover: var(--color-gray-200);
+  --color-toc-active: var(--color-primary-600);
+  --color-toc-active-bg: var(--color-primary-100);
+  --color-toc-active-border: var(--color-primary-600);
+  
+  /* Shadow Variables */
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-focus: 0 0 0 2px rgba(59, 130, 246, 0.3);
+}
+
+/* Dark Theme Variables */
+[data-theme="dark"] {
+  /* Dark Theme Semantic Variables */
+  --color-text-primary: var(--color-gray-100);
+  --color-text-secondary: var(--color-gray-300);
+  --color-text-muted: var(--color-gray-400);
+  --color-background-primary: var(--color-gray-900);
+  --color-background-secondary: var(--color-gray-800);
+  --color-background-elevated: var(--color-gray-800);
+  --color-border: var(--color-gray-700);
+  --color-border-hover: var(--color-gray-600);
+  
+  /* TOC Dark Theme Colors */
+  --color-toc-link: var(--color-gray-400);
+  --color-toc-link-hover: var(--color-gray-200);
+  --color-toc-background-hover: var(--color-gray-700);
+  --color-toc-border-hover: var(--color-gray-600);
+  --color-toc-active: var(--color-primary-300);
+  --color-toc-active-bg: var(--color-primary-800);
+  --color-toc-active-border: var(--color-primary-500);
+  
+  /* Dark Shadow Variables */
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.3), 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+  --shadow-focus: 0 0 0 2px rgba(59, 130, 246, 0.3);
+  --shadow-glow: 0 0 0 1px rgba(75, 85, 99, 0.3);
+  --shadow-glow-active: 0 0 0 1px rgba(59, 130, 246, 0.4), 0 0 8px rgba(59, 130, 246, 0.2);
+}
+

@@ -1,0 +1,268 @@
+---
+// 移动端目录组件 - 使用 TOCHelper 工具类
+---
+
+<style is:global>
+  @import "../styles/toc.css";
+</style>
+
+<!-- 移动端目录按钮 -->
+<button
+  id="mobile-toc-toggle"
+  class="lg:hidden fixed bottom-6 right-6 bg-blue-600 text-white p-4 rounded-full shadow-xl z-40 hover:bg-blue-700 transition-all duration-200 hover:scale-110"
+  aria-label="打开目录"
+>
+  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="2"
+      d="M4 6h16M4 10h16M4 14h16M4 18h16"></path>
+  </svg>
+</button>
+
+<!-- 移动端目录遮罩 -->
+<div
+  id="mobile-toc-overlay"
+  class="lg:hidden fixed inset-0 bg-black/40 mobile-toc-overlay z-40 opacity-0 pointer-events-none"
+>
+</div>
+
+<!-- 移动端目录容器 -->
+<div
+  id="mobile-toc-container"
+  class="lg:hidden fixed bottom-0 left-0 right-0 z-50 mobile-toc-container"
+>
+  <div
+    class="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 rounded-t-2xl shadow-2xl max-h-[70vh] flex flex-col"
+  >
+    <!-- 目录头部 -->
+    <div
+      class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700"
+    >
+      <h3
+        class="text-lg font-semibold text-gray-900 dark:text-gray-100 flex items-center"
+        id="mobile-toc-heading"
+      >
+        <svg
+          class="w-4 h-4 mr-2"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M4 6h16M4 10h16M4 14h16M4 18h16"></path>
+        </svg>
+        目录
+      </h3>
+      <button
+        id="mobile-toc-close"
+        class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 p-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
+        aria-label="关闭目录"
+      >
+        <svg
+          class="w-5 h-5"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
+    <!-- 目录内容 -->
+    <div
+      class="mobile-toc-content flex-1 overflow-y-auto p-4"
+      id="mobile-toc-content"
+    >
+      <!-- 目录内容将通过 JavaScript 动态插入 -->
+    </div>
+  </div>
+</div>
+
+<style>
+  /* 移动端目录动画和样式 */
+  .mobile-toc-container {
+    transform: translateY(100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .mobile-toc-container.show {
+    transform: translateY(0);
+  }
+
+  .mobile-toc-overlay {
+    backdrop-filter: blur(4px);
+    transition: opacity 0.3s ease;
+  }
+
+  .mobile-toc-overlay.show {
+    opacity: 1;
+  }
+
+  /* 移动端目录内容样式调整 */
+  .mobile-toc-content {
+    /* 确保目录样式能正确应用 */
+    font-size: 0.875rem;
+  }
+
+  /* 移动端对 toc-container 的样式调整 */
+  .mobile-toc-content .toc-container {
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    background: transparent;
+    padding: 0;
+    margin: 0;
+  }
+
+  /* 移动端目录链接的额外样式调整 */
+  .mobile-toc-content #toc-nav {
+    /* 确保在移动端容器中正确显示 */
+  }
+</style>
+
+<script>
+  import { TOCHelper, updateTOCActiveState } from "../utils/tocHelper";
+
+  // 移动端目录管理
+  document.addEventListener("DOMContentLoaded", () => {
+    const elements = {
+      toggle: document.getElementById("mobile-toc-toggle"),
+      close: document.getElementById("mobile-toc-close"),
+      overlay: document.getElementById("mobile-toc-overlay"),
+      container: document.getElementById("mobile-toc-container"),
+      content: document.getElementById("mobile-toc-content"),
+    };
+
+    // 检查元素是否存在
+    if (Object.values(elements).some((el) => !el)) {
+      console.warn("移动端目录元素未找到");
+      return;
+    }
+
+    let isOpen = false;
+    let mobileTocHelper: TOCHelper | null = null;
+
+    // 打开目录
+    const openTOC = async () => {
+      if (isOpen) return;
+
+      // 创建移动端专用的 TOC 助手实例
+      if (!mobileTocHelper) {
+        mobileTocHelper = new TOCHelper((activeId: string) => {
+          updateTOCActiveState(elements.content!, activeId);
+        });
+        mobileTocHelper.init();
+      }
+
+      // 生成目录内容
+      generateMobileTOC();
+      isOpen = true;
+
+      // 显示遮罩
+      elements.overlay!.classList.remove("opacity-0", "pointer-events-none");
+      elements.overlay!.classList.add("show");
+
+      // 显示容器
+      await nextFrame();
+      elements.container!.classList.add("show");
+
+      // 阻止背景滚动
+      document.body.style.overflow = "hidden";
+    };
+
+    // 关闭目录
+    const closeTOC = async () => {
+      if (!isOpen) return;
+
+      isOpen = false;
+
+      // 隐藏容器
+      elements.container!.classList.remove("show");
+
+      // 延迟隐藏遮罩以配合动画
+      setTimeout(() => {
+        elements.overlay!.classList.remove("show");
+        elements.overlay!.classList.add("opacity-0", "pointer-events-none");
+      }, 300);
+
+      // 恢复背景滚动
+      document.body.style.overflow = "";
+    };
+
+    // 生成移动端目录内容
+    const generateMobileTOC = () => {
+      if (!mobileTocHelper) return;
+
+      const tocHTML = mobileTocHelper.getTOCHTML();
+      if (tocHTML) {
+        // 创建目录导航容器 - 使用与桌面端相同的 ID 以共享样式
+        const nav = document.createElement("nav");
+        nav.id = "toc-nav"; // 使用与桌面端相同的 ID
+        nav.setAttribute("aria-labelledby", "mobile-toc-heading");
+        nav.setAttribute("role", "navigation");
+        nav.setAttribute("aria-label", "移动端文章目录导航");
+        nav.innerHTML = tocHTML;
+
+        // 清空并添加新内容
+        elements.content!.innerHTML = "";
+        elements.content!.appendChild(nav);
+
+        // 设置点击处理
+        mobileTocHelper.setupClickHandler(nav);
+      }
+    };
+
+    // 滚动到目标位置
+    const scrollTo = (id: string) => {
+      if (mobileTocHelper) {
+        mobileTocHelper.scrollTo(id);
+        closeTOC();
+      }
+    };
+
+    // 获取下一帧
+    const nextFrame = (): Promise<void> => {
+      return new Promise((resolve) => requestAnimationFrame(() => resolve()));
+    };
+
+    // 事件监听
+    elements.toggle!.addEventListener("click", openTOC);
+    elements.close!.addEventListener("click", closeTOC);
+    elements.overlay!.addEventListener("click", closeTOC);
+
+    // 目录项点击处理（委托给 TOCHelper）
+    elements.content!.addEventListener("click", (e) => {
+      const target = e.target as HTMLElement;
+      const link = target?.closest("a");
+      if (!link) return;
+
+      e.preventDefault();
+      const id = link.getAttribute("data-id");
+      if (id) scrollTo(id);
+    });
+
+    // ESC 键关闭
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && isOpen) {
+        closeTOC();
+      }
+    });
+
+    // 页面卸载时清理资源
+    window.addEventListener("beforeunload", () => {
+      if (mobileTocHelper) {
+        mobileTocHelper.destroy();
+      }
+    });
+  });
+</script>

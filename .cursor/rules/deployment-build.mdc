@@ -1,0 +1,95 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Deployment & Build Configuration
+
+## Build Configuration
+
+### Astro Configuration
+The main configuration is in [astro.config.mjs](mdc:astro.config.mjs):
+- **Output**: Static site generation (`output: 'static'`)
+- **Site URL**: `https://sweetretry.github.io/tech-hub`
+- **Adapter**: Vercel adapter with web analytics enabled
+- **Integrations**: MDX and sitemap generation
+
+### Build Scripts
+Available scripts in [package.json](mdc:package.json):
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build locally
+- `npm run astro` - Run Astro CLI commands
+
+## Vercel Deployment
+
+### Adapter Configuration
+The Vercel adapter is configured with:
+- Web Analytics enabled for performance tracking
+- Static output for optimal performance
+- Automatic sitemap generation via @astrojs/sitemap
+
+### Analytics Integration
+- **Vercel Analytics**: Configured in the adapter settings
+- **Speed Insights**: Component available at [SpeedInsights.astro](mdc:src/components/SpeedInsights.astro)
+- **Analytics Data**: View in Vercel dashboard for performance metrics
+
+### Environment Variables
+For production deployment, ensure:
+- Site URL is correctly set in [astro.config.mjs](mdc:astro.config.mjs)
+- Any API keys or secrets are configured in Vercel dashboard
+- Build output directory is set to `dist/`
+
+## Performance Optimization
+
+### Image Optimization
+- Sharp is included in dependencies for image processing
+- Images in `src/assets/` are automatically optimized
+- Use WebP format for better compression
+
+### CSS Optimization
+- Tailwind CSS is configured with [tailwind.config.js](mdc:tailwind.config.js)
+- Vite plugin integration for optimal CSS bundling
+- Typography plugin for consistent content styling
+
+### Bundle Optimization
+- Astro automatically optimizes JavaScript bundles
+- Static site generation reduces client-side JavaScript
+- Tree-shaking removes unused code
+
+## SEO Features
+
+### Sitemap Generation
+- Automatic sitemap generation via @astrojs/sitemap
+- Configured for the production site URL
+- Updates automatically on build
+
+### RSS Feed
+- @astrojs/rss dependency included for RSS generation
+- Implement RSS feed generation for blog categories
+- Configure feed metadata in constants
+
+### Meta Tags
+- [BaseHead.astro](mdc:src/components/BaseHead.astro) handles all meta tags
+- OpenGraph and Twitter Card support
+- Proper canonical URLs and structured data
+
+## Build Optimization
+
+### TypeScript
+- Configuration in [tsconfig.json](mdc:tsconfig.json)
+- Strict type checking for better code quality
+- Astro-specific TypeScript support
+
+### Markdown Processing
+- Rehype plugins for enhanced markdown processing
+- Automatic heading links via rehype-autolink-headings
+- Slug generation for heading anchors
+
+## Deployment Checklist
+1. Verify build succeeds locally (`npm run build`)
+2. Test preview version (`npm run preview`)
+3. Check all links and images work correctly
+4. Verify SEO meta tags are present
+5. Test responsive design on different devices
+6. Confirm analytics tracking is working

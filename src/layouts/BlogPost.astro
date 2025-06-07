@@ -4,6 +4,7 @@ import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import SpeedInsights from "../components/SpeedInsights.astro";
 import TableOfContents from "../components/TableOfContents.astro";
+import MobileTOC from "../components/MobileTOC.astro";
 import FormattedDate from "../components/FormattedDate.astro";
 import { Image } from "astro:assets";
 
@@ -26,19 +27,14 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
       .prose {
         max-width: none;
       }
-      
+
       /* 移动端优化 */
       @media (max-width: 768px) {
         .prose {
           font-size: 0.95rem;
         }
       }
-      
-      /* 移动端目录动画 */
-      .mobile-toc-show {
-        transform: translateY(0) !important;
-      }
-      
+
       /* 确保目录在合适的层级 */
       .toc-container {
         z-index: 30;
@@ -53,141 +49,72 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
     <main class="w-full max-w-7xl mx-auto px-0 pt-16">
       <div class="flex gap-8 relative">
         <!-- 左侧目录 - 桌面端显示 -->
-        <aside class="hidden lg:block w-80 flex-shrink-0 sticky top-20 self-start h-fit max-h-[calc(100vh-6rem)] overflow-y-auto">
+        <aside
+          class="hidden lg:block w-80 flex-shrink-0 sticky top-20 self-start h-fit max-h-[calc(100vh-6rem)] overflow-y-auto"
+        >
           <TableOfContents />
         </aside>
-        
-        <!-- 移动端目录按钮 -->
-        <button 
-          id="mobile-toc-toggle" 
-          class="lg:hidden fixed bottom-6 right-6 bg-blue-600 text-white p-3 rounded-full shadow-lg z-20 hover:bg-blue-700 transition-colors duration-200"
-          aria-label="打开目录"
-        >
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/>
-          </svg>
-        </button>
-        
-        <!-- 移动端目录遮罩 -->
-        <div id="mobile-toc-overlay" class="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-40 hidden"></div>
-        
-        <!-- 移动端目录容器 -->
-        <div id="mobile-toc-container" class="lg:hidden fixed bottom-0 left-0 right-0 z-50 transform translate-y-full transition-transform duration-300">
-          <div class="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 rounded-t-2xl p-4 max-h-[60vh] overflow-y-auto">
-            <div class="flex items-center justify-between mb-4">
-              <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">目录</h3>
-              <button id="mobile-toc-close" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                </svg>
-              </button>
-            </div>
-            <div id="mobile-toc-content"></div>
-          </div>
-        </div>
 
-      <article class="flex-1 min-w-0">
-        <!-- Hero Image -->
-        {
-          heroImage && (
-            <div class="w-full max-w-7xl mx-auto px-6 md:px-8">
-              <div class="my-8 md:my-12">
-                <Image
-                  width={1020}
-                  height={510}
-                  src={heroImage}
-                  alt={title}
-                  class="block mx-auto rounded-xl shadow-lg dark:shadow-gray-900/50 max-w-full h-auto transition-transform duration-300 hover:scale-[1.02]"
-                />
+        <article class="flex-1 min-w-0">
+          <!-- Hero Image -->
+          {
+            heroImage && (
+              <div class="w-full max-w-7xl mx-auto px-6 md:px-8">
+                <div class="my-8 md:my-12">
+                  <Image
+                    width={1020}
+                    height={510}
+                    src={heroImage}
+                    alt={title}
+                    class="block mx-auto rounded-xl shadow-lg dark:shadow-gray-900/50 max-w-full h-auto transition-transform duration-300 hover:scale-[1.02]"
+                  />
+                </div>
               </div>
-            </div>
-          )
-        }
+            )
+          }
 
-        <!-- Content -->
-        <div class="blog-content max-w-4xl mx-auto px-6 md:px-8 py-8 md:py-12">
-          <!-- Title Section -->
+          <!-- Content -->
           <div
-            class="text-center mb-12 pb-8 border-b border-gray-200 dark:border-gray-700"
+            class="blog-content max-w-4xl mx-auto px-6 md:px-8 py-8 md:py-12"
           >
-            <div class="mb-6 space-y-2">
-              <time
-                class="inline-flex items-center px-3 py-1 rounded-full text-sm bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 font-medium"
-              >
-                <FormattedDate date={pubDate} />
-              </time>
-              {
-                updatedDate && (
-                  <div class="text-sm text-gray-500 dark:text-gray-500 italic mt-2">
-                    最后更新于 <FormattedDate date={updatedDate} />
-                  </div>
-                )
-              }
-            </div>
-            <h1
-              class="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-gray-100 leading-tight"
+            <!-- Title Section -->
+            <div
+              class="text-center mb-12 pb-8 border-b border-gray-200 dark:border-gray-700"
             >
-              {title}
-            </h1>
-          </div>
+              <div class="mb-6 space-y-2">
+                <time
+                  class="inline-flex items-center px-3 py-1 rounded-full text-sm bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 font-medium"
+                >
+                  <FormattedDate date={pubDate} />
+                </time>
+                {
+                  updatedDate && (
+                    <div class="text-sm text-gray-500 dark:text-gray-500 italic mt-2">
+                      最后更新于 <FormattedDate date={updatedDate} />
+                    </div>
+                  )
+                }
+              </div>
+              <h1
+                class="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-gray-100 leading-tight"
+              >
+                {title}
+              </h1>
+            </div>
 
-          <!-- Article Content with Tailwind Typography -->
-          <div class="prose prose-lg dark:prose-invert mx-auto max-w-none">
-            <slot />
+            <!-- Article Content with Tailwind Typography -->
+            <div class="prose prose-lg dark:prose-invert mx-auto max-w-none">
+              <slot />
+            </div>
           </div>
-        </div>
-      </article>
+        </article>
       </div>
     </main>
+
+    <!-- 移动端目录组件 -->
+    <MobileTOC />
+
     <Footer />
     <SpeedInsights />
-    
-    <script>
-      // 移动端目录控制
-      function setupMobileTOC() {
-        const toggleBtn = document.getElementById('mobile-toc-toggle');
-        const closeBtn = document.getElementById('mobile-toc-close');
-        const overlay = document.getElementById('mobile-toc-overlay');
-        const container = document.getElementById('mobile-toc-container');
-        const mobileContent = document.getElementById('mobile-toc-content');
-        
-        if (!toggleBtn || !closeBtn || !overlay || !container || !mobileContent) return;
-        
-        // 复制桌面端目录内容到移动端
-        function copyTOCContent() {
-          const desktopTOC = document.querySelector('aside .toc-content');
-          if (desktopTOC) {
-            mobileContent.innerHTML = desktopTOC.innerHTML;
-          }
-        }
-        
-        function openTOC() {
-          copyTOCContent();
-          overlay.classList.remove('hidden');
-          container.classList.add('mobile-toc-show');
-          document.body.style.overflow = 'hidden';
-        }
-        
-        function closeTOC() {
-          overlay.classList.add('hidden');
-          container.classList.remove('mobile-toc-show');
-          document.body.style.overflow = '';
-        }
-        
-        toggleBtn.addEventListener('click', openTOC);
-        closeBtn.addEventListener('click', closeTOC);
-        overlay.addEventListener('click', closeTOC);
-        
-        // 移动端目录项点击后关闭目录
-        container.addEventListener('click', (e) => {
-          if (e.target.classList.contains('toc-item')) {
-            closeTOC();
-          }
-        });
-      }
-      
-      // 页面加载完成后初始化
-      document.addEventListener('DOMContentLoaded', setupMobileTOC);
-    </script>
   </body>
 </html>
